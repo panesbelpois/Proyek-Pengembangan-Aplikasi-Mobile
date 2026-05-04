@@ -3,7 +3,7 @@ package com.example.fitgen.data.repository
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull
-import com.example.fitgen.data.local.NoteDatabase
+import com.example.fitgen.data.local.FitGenDatabase
 import com.example.fitgen.data.local.entity.toDomain
 import com.example.fitgen.data.local.entity.toDomainList
 import com.example.fitgen.data.local.entity.toEntityValues
@@ -16,45 +16,45 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 
-class NoteRepositoryImpl(private val database: NoteDatabase) : NoteRepository {
-    
-    private val queries = database.noteQueries
-    
+class NoteRepositoryImpl(private val database: FitGenDatabase) : NoteRepository {
+
+    private val queries = database.fitGenQueries  // ← DIUBAH dari noteQueries
+
     override fun getAllNotes(): Flow<List<Note>> {
         return queries.getAllNotes()
             .asFlow()
             .mapToList(Dispatchers.Default)
             .map { entities -> entities.toDomainList() }
     }
-    
+
     override fun getPinnedNotes(): Flow<List<Note>> {
         return queries.getPinnedNotes()
             .asFlow()
             .mapToList(Dispatchers.Default)
             .map { entities -> entities.toDomainList() }
     }
-    
+
     override fun getNotesByCategory(category: NoteCategory): Flow<List<Note>> {
         return queries.getNotesByCategory(category.name)
             .asFlow()
             .mapToList(Dispatchers.Default)
             .map { entities -> entities.toDomainList() }
     }
-    
+
     override fun searchNotes(query: String): Flow<List<Note>> {
         return queries.searchNotes(query, query)
             .asFlow()
             .mapToList(Dispatchers.Default)
             .map { entities -> entities.toDomainList() }
     }
-    
+
     override fun getNoteById(id: Long): Flow<Note?> {
         return queries.getNoteById(id)
             .asFlow()
             .mapToOneOrNull(Dispatchers.Default)
             .map { entity -> entity?.toDomain() }
     }
-    
+
     override suspend fun insertNote(note: Note): Long = withContext(Dispatchers.Default) {
         val values = note.toEntityValues()
         queries.insertNote(
@@ -68,7 +68,7 @@ class NoteRepositoryImpl(private val database: NoteDatabase) : NoteRepository {
         )
         queries.lastInsertId().executeAsOne()
     }
-    
+
     override suspend fun updateNote(note: Note) = withContext(Dispatchers.Default) {
         val values = note.toEntityValues()
         queries.updateNote(
@@ -81,18 +81,18 @@ class NoteRepositoryImpl(private val database: NoteDatabase) : NoteRepository {
             updated_at = Clock.System.now().toEpochMilliseconds()
         )
     }
-    
+
     override suspend fun deleteNote(id: Long) = withContext(Dispatchers.Default) {
         queries.deleteNoteById(id)
     }
-    
+
     override suspend fun togglePinNote(id: Long) = withContext(Dispatchers.Default) {
         queries.togglePin(
             id = id,
             updated_at = Clock.System.now().toEpochMilliseconds()
         )
     }
-    
+
     override suspend fun deleteNotes(ids: List<Long>) = withContext(Dispatchers.Default) {
         queries.deleteNotesByIds(ids)
     }
