@@ -1,0 +1,84 @@
+-- ============================================================
+-- BodyMetric.sq
+-- SQLDelight schema untuk tabel MealLog dan BodyMetric
+-- ============================================================
+
+-- ==================== MEAL LOG TABLE ====================
+
+CREATE TABLE IF NOT EXISTS MealLogEntity (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    tanggal         INTEGER NOT NULL,
+    nama_makanan    TEXT    NOT NULL,
+    kalori          INTEGER NOT NULL DEFAULT 0,
+    protein_g       REAL    NOT NULL DEFAULT 0.0,
+    karbohidrat_g   REAL    NOT NULL DEFAULT 0.0,
+    lemak_g         REAL    NOT NULL DEFAULT 0.0,
+    jenis_makan     TEXT    NOT NULL DEFAULT 'BREAKFAST'
+);
+
+getAllMealLogs:
+SELECT * FROM MealLogEntity
+ORDER BY tanggal DESC;
+
+getMealLogById:
+SELECT * FROM MealLogEntity
+WHERE id = ?;
+
+getMealLogsByDate:
+SELECT * FROM MealLogEntity
+WHERE tanggal >= ? AND tanggal < ?
+ORDER BY tanggal ASC;
+
+getDailyCaloriesTotal:
+SELECT SUM(kalori) FROM MealLogEntity
+WHERE tanggal >= ? AND tanggal < ?;
+
+insertMealLog:
+INSERT INTO MealLogEntity (tanggal, nama_makanan, kalori, protein_g, karbohidrat_g, lemak_g, jenis_makan)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+lastInsertMealLogId:
+SELECT last_insert_rowid();
+
+updateMealLog:
+UPDATE MealLogEntity
+SET nama_makanan = ?, kalori = ?, protein_g = ?, karbohidrat_g = ?, lemak_g = ?, jenis_makan = ?
+WHERE id = ?;
+
+deleteMealLogById:
+DELETE FROM MealLogEntity
+WHERE id = ?;
+
+-- ==================== BODY METRIC TABLE ====================
+
+CREATE TABLE IF NOT EXISTS BodyMetricEntity (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    tanggal             INTEGER NOT NULL,
+    berat_badan         REAL    NOT NULL,
+    persentase_lemak    REAL    NOT NULL DEFAULT 0.0,
+    catatan             TEXT    NOT NULL DEFAULT ''
+);
+
+getAllBodyMetrics:
+SELECT * FROM BodyMetricEntity
+ORDER BY tanggal DESC;
+
+getLatestBodyMetric:
+SELECT * FROM BodyMetricEntity
+ORDER BY tanggal DESC
+LIMIT 1;
+
+getBodyMetricById:
+SELECT * FROM BodyMetricEntity
+WHERE id = ?;
+
+insertBodyMetric:
+INSERT INTO BodyMetricEntity (tanggal, berat_badan, persentase_lemak, catatan)
+VALUES (?, ?, ?, ?);
+
+lastInsertBodyMetricId:
+SELECT last_insert_rowid();
+
+deleteBodyMetricById:
+DELETE FROM BodyMetricEntity
+WHERE id = ?;
