@@ -19,7 +19,13 @@ interface MealRepository {
      * @return Total kalori (kkal), atau 0 jika belum ada log
      */
     suspend fun getDailyCaloriesTotal(startOfDay: Long, endOfDay: Long): Int
+
+    /** Menyimpan meal log baru ke database */
     suspend fun insertMeal(meal: MealLog): Long
+
+    /** Memperbarui meal log yang sudah ada */
     suspend fun updateMeal(meal: MealLog)
+
+    /** Menghapus meal log berdasarkan ID */
     suspend fun deleteMeal(id: Long)
 }

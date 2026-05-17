@@ -8,24 +8,29 @@ import com.example.fitgen.data.local.datastore.UserPreferences
 import com.example.fitgen.data.local.datastore.create
 import com.example.fitgen.data.remote.api.GeminiService
 import com.example.fitgen.data.repository.AIRepositoryImpl
+import com.example.fitgen.data.repository.BodyMetricRepositoryImpl
+import com.example.fitgen.data.repository.MealRepositoryImpl
 import com.example.fitgen.data.repository.WorkoutRepositoryImpl
-// Sprint 2: import com.example.fitgen.data.repository.MealRepositoryImpl
 // Sprint 2: import com.example.fitgen.data.repository.GpsRepositoryImpl
-// Sprint 3: import com.example.fitgen.data.repository.BodyMetricRepositoryImpl
+// Sprint 3: (BodyMetricRepositoryImpl sudah diaktifkan di Sprint 2)
 import com.example.fitgen.domain.repository.AIRepository
+import com.example.fitgen.domain.repository.BodyMetricRepository
+import com.example.fitgen.domain.repository.MealRepository
 import com.example.fitgen.domain.repository.WorkoutRepository
-// Sprint 2: import com.example.fitgen.domain.repository.MealRepository
 // Sprint 2: import com.example.fitgen.domain.repository.GpsRepository
-// Sprint 3: import com.example.fitgen.domain.repository.BodyMetricRepository
 import com.example.fitgen.domain.usecase.GetAllWorkoutsUseCase
+import com.example.fitgen.domain.usecase.GetDailyCaloriesUseCase
+import com.example.fitgen.domain.usecase.LogMealUseCase
 import com.example.fitgen.domain.usecase.LogWorkoutUseCase
-// Sprint 2: import com.example.fitgen.domain.usecase.meal.*
+import com.example.fitgen.domain.usecase.NoteUseCases
 // Sprint 2: import com.example.fitgen.domain.usecase.gps.*
 // Sprint 3: import com.example.fitgen.domain.usecase.bodymetric.*
+import com.example.fitgen.presentation.screens.home.HomeDashboardViewModel
+import com.example.fitgen.presentation.screens.nutrition.AddMealViewModel
+import com.example.fitgen.presentation.screens.nutrition.NutritionViewModel
 import com.example.fitgen.presentation.screens.profile.ProfileViewModel
 import com.example.fitgen.presentation.screens.workout.AddWorkoutViewModel
 import com.example.fitgen.presentation.screens.workout.WorkoutListViewModel
-// Sprint 2: import com.example.fitgen.presentation.screens.meal.MealViewModel
 // Sprint 2: import com.example.fitgen.presentation.screens.gps.GpsViewModel
 // Sprint 2: import com.example.fitgen.presentation.screens.ai.AIViewModel
 // Sprint 3: import com.example.fitgen.presentation.screens.bodymetric.BodyMetricViewModel
@@ -77,13 +82,15 @@ val repositoryModule = module {
     singleOf(::WorkoutRepositoryImpl) bind WorkoutRepository::class
 
     // --- Meal / Nutrition Repository (Sprint 2) ---
-    // singleOf(::MealRepositoryImpl) bind MealRepository::class
+    // Menggunakan in-memory storage sementara (tidak butuh parameter database)
+    single<MealRepository> { MealRepositoryImpl() }
 
     // --- GPS Activity Repository (Sprint 2) ---
     // singleOf(::GpsRepositoryImpl) bind GpsRepository::class
 
-    // --- Body Metric Repository (Sprint 3) ---
-    // singleOf(::BodyMetricRepositoryImpl) bind BodyMetricRepository::class
+    // --- Body Metric Repository (Sprint 2/3) ---
+    // Menggunakan in-memory storage sementara (tidak butuh parameter database)
+    single<BodyMetricRepository> { BodyMetricRepositoryImpl() }
 }
 
 // ==================== USE CASE MODULE ====================
@@ -95,6 +102,9 @@ val useCaseModule = module {
     // singleOf(::GenerateWorkoutPlanUseCase)
     // singleOf(::AnalyzeNutritionUseCase)
 
+    // --- Notes Use Cases (Sprint 1) ---
+    singleOf(::NoteUseCases)
+
     // --- Workout Use Cases (Sprint 2) ---
     singleOf(::GetAllWorkoutsUseCase)
     singleOf(::LogWorkoutUseCase)
@@ -102,8 +112,8 @@ val useCaseModule = module {
     // singleOf(::GetWorkoutByIdUseCase)
 
     // --- Meal / Nutrition Use Cases (Sprint 2) ---
-    // singleOf(::GetAllMealsUseCase)
-    // singleOf(::LogMealUseCase)
+    singleOf(::LogMealUseCase)
+    singleOf(::GetDailyCaloriesUseCase)
     // singleOf(::DeleteMealUseCase)
     // singleOf(::GetDailyNutritionSummaryUseCase)
 
@@ -126,15 +136,19 @@ val viewModelModule = module {
     // --- AI ViewModel (Sprint 1) ---
     // viewModelOf(::AIViewModel)
 
+    // --- Dashboard ViewModel (Sprint 2) ---
+    viewModelOf(::HomeDashboardViewModel)
+
     // --- Workout ViewModel (Sprint 2) ---
     viewModelOf(::WorkoutListViewModel)
     viewModelOf(::AddWorkoutViewModel)
 
+    // --- Nutrition ViewModel (Sprint 2) ---
+    viewModelOf(::NutritionViewModel)
+    viewModelOf(::AddMealViewModel)
+
     // --- Profile ViewModel (Sprint 3) ---
     viewModelOf(::ProfileViewModel)
-
-    // --- Meal ViewModel (Sprint 2) ---
-    // viewModelOf(::MealViewModel)
 
     // --- GPS ViewModel (Sprint 2) ---
     // viewModelOf(::GpsViewModel)
