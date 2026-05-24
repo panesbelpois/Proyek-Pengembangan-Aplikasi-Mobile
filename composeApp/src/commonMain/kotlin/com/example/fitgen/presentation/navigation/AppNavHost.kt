@@ -118,8 +118,9 @@ fun AppNavHost(
         ) {
             composable<Route.Home> {
                 HomeDashboardScreen(
-                    onNavigateToWorkout   = { navigationActions.navigateToWorkoutList() },
-                    onNavigateToNutrition = { navigationActions.navigateToNutrition() }
+                    onNavigateToWorkout        = { navigationActions.navigateToWorkoutList() },
+                    onNavigateToNutrition      = { navigationActions.navigateToNutrition() },
+                    onNavigateToDynamicWorkout = { navigationActions.navigateToDynamicWorkout() }
                 )
             }
             composable<Route.AIAssistant> { backStackEntry ->
@@ -133,8 +134,9 @@ fun AppNavHost(
             }
             composable<Route.Dashboard> {
                 HomeDashboardScreen(
-                    onNavigateToWorkout   = { navigationActions.navigateToWorkoutList() },
-                    onNavigateToNutrition = { navigationActions.navigateToNutrition() }
+                    onNavigateToWorkout        = { navigationActions.navigateToWorkoutList() },
+                    onNavigateToNutrition      = { navigationActions.navigateToNutrition() },
+                    onNavigateToDynamicWorkout = { navigationActions.navigateToDynamicWorkout() }
                 )
             }
             composable<Route.WorkoutList> {
