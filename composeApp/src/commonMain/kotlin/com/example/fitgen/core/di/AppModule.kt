@@ -19,8 +19,12 @@ import com.example.fitgen.domain.repository.WorkoutRepository
 // Sprint 2: import com.example.fitgen.domain.repository.GpsRepository
 import com.example.fitgen.domain.usecase.GetAllWorkoutsUseCase
 import com.example.fitgen.domain.usecase.GetDailyCaloriesUseCase
+import com.example.fitgen.domain.usecase.GetDailyWaterGlassesUseCase
+import com.example.fitgen.domain.usecase.GetLoginStreakUseCase
 import com.example.fitgen.domain.usecase.LogMealUseCase
 import com.example.fitgen.domain.usecase.LogWorkoutUseCase
+import com.example.fitgen.domain.usecase.UpdateLoginStreakUseCase
+import com.example.fitgen.domain.usecase.AddWaterGlassUseCase
 // Sprint 2: import com.example.fitgen.domain.usecase.gps.*
 // Sprint 3: import com.example.fitgen.domain.usecase.bodymetric.*
 import com.example.fitgen.presentation.screens.home.HomeDashboardViewModel
@@ -105,15 +109,16 @@ val useCaseModule = module {
     // --- Workout Use Cases (Sprint 2) ---
     singleOf(::GetAllWorkoutsUseCase)
     singleOf(::LogWorkoutUseCase)
-    // singleOf(::DeleteWorkoutUseCase)
-    // singleOf(::GetWorkoutByIdUseCase)
-
+    
     // --- Meal / Nutrition Use Cases (Sprint 2) ---
     singleOf(::LogMealUseCase)
     singleOf(::GetDailyCaloriesUseCase)
-    // singleOf(::DeleteMealUseCase)
-    // singleOf(::GetDailyNutritionSummaryUseCase)
-
+    
+    factory { UpdateLoginStreakUseCase(get()) }
+    factory { GetLoginStreakUseCase(get()) }
+    factory { AddWaterGlassUseCase(get()) }
+    factory { GetDailyWaterGlassesUseCase(get()) }
+    
     // --- GPS Activity Use Cases (Sprint 2) ---
     // singleOf(::StartGpsTrackingUseCase)
     // singleOf(::StopGpsTrackingUseCase)
