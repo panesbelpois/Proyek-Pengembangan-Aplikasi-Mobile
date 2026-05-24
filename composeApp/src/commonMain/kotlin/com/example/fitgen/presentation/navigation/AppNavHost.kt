@@ -24,9 +24,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.fitgen.presentation.screens.addnote.AddNoteScreen
 import com.example.fitgen.presentation.screens.ai.AIAssistantScreen
-import com.example.fitgen.presentation.screens.detail.NoteDetailScreen
+import com.example.fitgen.presentation.screens.ai.DynamicWorkoutScreen
 import com.example.fitgen.presentation.screens.home.HomeDashboardScreen
 import com.example.fitgen.presentation.screens.home.HomeScreen
 import com.example.fitgen.presentation.screens.nutrition.AddMealScreen
@@ -67,10 +66,10 @@ fun AppNavHost(
                             Icon(
                                 if (currentDestination?.hasRoute(Route.Home::class) == true)
                                     Icons.Filled.Home else Icons.Outlined.Home,
-                                contentDescription = "Catatan"
+                                contentDescription = "Beranda"
                             )
                         },
-                        label = { Text("Catatan") }
+                        label = { Text("Beranda") }
                     )
                     NavigationBarItem(
                         selected = currentDestination?.hasRoute(Route.WorkoutList::class) == true,
@@ -118,38 +117,15 @@ fun AppNavHost(
             modifier         = modifier
         ) {
             composable<Route.Home> {
-                HomeScreen(
-                    onNavigateToAddNote = { navigationActions.navigateToAddNote() },
-                    onNavigateToDetail  = { noteId -> navigationActions.navigateToNoteDetail(noteId) },
-                    onNavigateToAI      = { navigationActions.navigateToAIAssistant() }
-                )
-            }
-            composable<Route.AddNote> { backStackEntry ->
-                val route: Route.AddNote = backStackEntry.toRoute()
-                AddNoteScreen(
-                    noteId         = route.noteId,
-                    onNavigateBack = { navigationActions.navigateBack() },
-                    onNavigateToAI = { text ->
-                        navigationActions.navigateToAIAssistant(
-                            noteId      = route.noteId,
-                            initialText = text
-                        )
-                    }
-                )
-            }
-            composable<Route.NoteDetail> { backStackEntry ->
-                val route: Route.NoteDetail = backStackEntry.toRoute()
-                NoteDetailScreen(
-                    noteId           = route.noteId,
-                    onNavigateBack   = { navigationActions.navigateBack() },
-                    onNavigateToEdit = { navigationActions.navigateToAddNote(route.noteId) },
-                    onShare          = { _ -> }
+                HomeDashboardScreen(
+                    onNavigateToWorkout   = { navigationActions.navigateToWorkoutList() },
+                    onNavigateToNutrition = { navigationActions.navigateToNutrition() }
                 )
             }
             composable<Route.AIAssistant> { backStackEntry ->
                 val route: Route.AIAssistant = backStackEntry.toRoute()
                 AIAssistantScreen(
-                    noteId         = route.noteId,
+                    noteId         = null,
                     initialText    = route.initialText,
                     onNavigateBack = { navigationActions.navigateBack() },
                     onApplyResult  = null
@@ -181,6 +157,11 @@ fun AppNavHost(
                     onNavigateBack = { navigationActions.navigateBack() }
                 )
             }
+            composable<Route.DynamicWorkout> {
+                DynamicWorkoutScreen(
+                    onNavigateBack = { navigationActions.navigateBack() }
+                )
+            }
         }
     }
 }
@@ -193,10 +174,9 @@ private fun createNavigationActions(navController: NavHostController): Navigatio
         override fun navigateToDashboard() {
             navController.navigate(Route.Dashboard) { popUpTo(Route.Dashboard) { inclusive = true } }
         }
-        override fun navigateToAddNote(noteId: Long?) = navController.navigate(Route.AddNote(noteId))
-        override fun navigateToNoteDetail(noteId: Long) = navController.navigate(Route.NoteDetail(noteId))
-        override fun navigateToAIAssistant(noteId: Long?, initialText: String?) =
-            navController.navigate(Route.AIAssistant(noteId, initialText))
+        override fun navigateToAIAssistant(initialText: String?) =
+            navController.navigate(Route.AIAssistant(initialText))
+        override fun navigateToDynamicWorkout() = navController.navigate(Route.DynamicWorkout)
         override fun navigateToWorkoutList() {
             navController.navigate(Route.WorkoutList) { popUpTo(Route.WorkoutList) { inclusive = true } }
         }

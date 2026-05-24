@@ -10,27 +10,17 @@ import com.example.fitgen.data.remote.api.GeminiService
 import com.example.fitgen.data.repository.AIRepositoryImpl
 import com.example.fitgen.data.repository.BodyMetricRepositoryImpl
 import com.example.fitgen.data.repository.MealRepositoryImpl
-import com.example.fitgen.data.repository.NoteRepositoryImpl
 import com.example.fitgen.data.repository.WorkoutRepositoryImpl
 // Sprint 2: import com.example.fitgen.data.repository.GpsRepositoryImpl
-// Sprint 3: (BodyMetricRepositoryImpl sudah diaktifkan di Sprint 2)
 import com.example.fitgen.domain.repository.AIRepository
 import com.example.fitgen.domain.repository.BodyMetricRepository
 import com.example.fitgen.domain.repository.MealRepository
-import com.example.fitgen.domain.repository.NoteRepository
 import com.example.fitgen.domain.repository.WorkoutRepository
 // Sprint 2: import com.example.fitgen.domain.repository.GpsRepository
-import com.example.fitgen.domain.usecase.DeleteNoteUseCase
-import com.example.fitgen.domain.usecase.GenerateIdeasUseCase
-import com.example.fitgen.domain.usecase.GetAllNotesUseCase
 import com.example.fitgen.domain.usecase.GetAllWorkoutsUseCase
 import com.example.fitgen.domain.usecase.GetDailyCaloriesUseCase
-import com.example.fitgen.domain.usecase.ImproveWritingUseCase
 import com.example.fitgen.domain.usecase.LogMealUseCase
 import com.example.fitgen.domain.usecase.LogWorkoutUseCase
-import com.example.fitgen.domain.usecase.SaveNoteUseCase
-import com.example.fitgen.domain.usecase.SearchNotesUseCase
-import com.example.fitgen.domain.usecase.SummarizeNoteUseCase
 // Sprint 2: import com.example.fitgen.domain.usecase.gps.*
 // Sprint 3: import com.example.fitgen.domain.usecase.bodymetric.*
 import com.example.fitgen.presentation.screens.home.HomeDashboardViewModel
@@ -40,8 +30,9 @@ import com.example.fitgen.presentation.screens.nutrition.NutritionViewModel
 import com.example.fitgen.presentation.screens.profile.ProfileViewModel
 import com.example.fitgen.presentation.screens.workout.AddWorkoutViewModel
 import com.example.fitgen.presentation.screens.workout.WorkoutListViewModel
+import com.example.fitgen.presentation.screens.ai.AIAssistantViewModel
+import com.example.fitgen.presentation.screens.ai.DynamicWorkoutViewModel
 // Sprint 2: import com.example.fitgen.presentation.screens.gps.GpsViewModel
-// Sprint 2: import com.example.fitgen.presentation.screens.ai.AIViewModel
 // Sprint 3: import com.example.fitgen.presentation.screens.bodymetric.BodyMetricViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -84,9 +75,6 @@ val preferencesModule = module {
 
 val repositoryModule = module {
 
-    // --- Note Repository (Sprint 1) ---
-    singleOf(::NoteRepositoryImpl) bind NoteRepository::class
-
     // --- AI Repository (Sprint 1) ---
     singleOf(::AIRepositoryImpl) bind AIRepository::class
 
@@ -113,15 +101,6 @@ val useCaseModule = module {
     // --- AI Use Cases (Sprint 1) ---
     // singleOf(::GenerateWorkoutPlanUseCase)
     // singleOf(::AnalyzeNutritionUseCase)
-
-    // --- Notes Use Cases (Sprint 1) ---
-    singleOf(::GetAllNotesUseCase)
-    singleOf(::SearchNotesUseCase)
-    singleOf(::SaveNoteUseCase)
-    singleOf(::DeleteNoteUseCase)
-    singleOf(::SummarizeNoteUseCase)
-    singleOf(::ImproveWritingUseCase)
-    singleOf(::GenerateIdeasUseCase)
 
     // --- Workout Use Cases (Sprint 2) ---
     singleOf(::GetAllWorkoutsUseCase)
@@ -151,8 +130,9 @@ val useCaseModule = module {
 
 val viewModelModule = module {
 
-    // --- AI ViewModel (Sprint 1) ---
-    // viewModelOf(::AIViewModel)
+    // --- AI ViewModels ---
+    viewModelOf(::AIAssistantViewModel)
+    viewModelOf(::DynamicWorkoutViewModel)
 
     // --- Home ViewModel (Sprint 1) ---
     viewModelOf(::HomeViewModel)

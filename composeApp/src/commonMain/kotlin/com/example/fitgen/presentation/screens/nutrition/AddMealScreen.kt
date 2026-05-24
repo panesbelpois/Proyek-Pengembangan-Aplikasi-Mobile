@@ -159,7 +159,7 @@ private fun MealTypeDropdown(
             readOnly      = true,
             label         = { Text("Jenis Makan") },
             trailingIcon  = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-            modifier      = Modifier.fillMaxWidth().menuAnchor()
+            modifier      = Modifier.fillMaxWidth().menuAnchor(androidx.compose.material3.MenuAnchorType.PrimaryNotEditable, enabled = true)
         )
         ExposedDropdownMenu(
             expanded         = expanded,
