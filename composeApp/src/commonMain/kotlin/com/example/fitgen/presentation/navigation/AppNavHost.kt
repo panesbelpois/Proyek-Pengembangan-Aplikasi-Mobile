@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.padding
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -114,7 +115,7 @@ fun AppNavHost(
         NavHost(
             navController    = navController,
             startDestination = Route.Home,
-            modifier         = modifier
+            modifier         = modifier.padding(innerPadding)
         ) {
             composable<Route.Home> {
                 HomeDashboardScreen(
