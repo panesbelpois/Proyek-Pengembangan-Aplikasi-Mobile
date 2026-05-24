@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import com.example.fitgen.domain.usecase.GetExerciseGifUseCase
 
 // ==================== ENUMS / DATA ====================
 
@@ -47,6 +50,13 @@ enum class LevelChip(val label: String) {
     ADVANCED("Mahir")
 }
 
+@Serializable
+data class WorkoutItem(
+    val englishName: String,
+    val description: String,
+    var gifUrl: String? = null
+)
+
 // ==================== UI STATE ====================
 
 data class DynamicWorkoutUiState(
@@ -56,7 +66,7 @@ data class DynamicWorkoutUiState(
     val selectedGoal: GoalChip = GoalChip.FAT_BURN,
     val selectedLevel: LevelChip = LevelChip.BEGINNER,
     val isLoading: Boolean = false,
-    val result: String? = null,
+    val result: List<WorkoutItem>? = null,
     val error: String? = null
 ) {
     val canGenerate: Boolean
@@ -70,7 +80,8 @@ sealed interface DynamicWorkoutEvent {
 // ==================== VIEW MODEL ====================
 
 class DynamicWorkoutViewModel(
-    private val aiRepository: AIRepository
+    private val aiRepository: AIRepository,
+    private val getExerciseGifUseCase: GetExerciseGifUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DynamicWorkoutUiState())
@@ -121,13 +132,34 @@ class DynamicWorkoutViewModel(
             if (state.customPrompt.isNotBlank()) {
                 append("- Catatan tambahan: ${state.customPrompt}\n")
             }
-            append("\nTampilkan program lengkap dengan nama latihan, set, repetisi, dan waktu istirahat. Gunakan bahasa Indonesia.")
+            append("\nTampilkan program lengkap secara persis HANYA DALAM FORMAT JSON ARRAY murni. Contoh struktur: [ { \"englishName\": \"push up\", \"description\": \"3 set x 12 repetisi. Jaga punggung tetap lurus.\" } ]. Gunakan bahasa Inggris HANYA untuk 'englishName' agar saya bisa mencarinya di database, sedangkan 'description' tetap bahasa Indonesia. Jangan sertakan teks markdown (seperti ```json) atau teks pengantar apa pun. Berikan hanya JSON array.")
         }
 
         viewModelScope.launch {
             aiRepository.chat(prompt)
                 .onSuccess { output ->
-                    _uiState.update { it.copy(isLoading = false, result = output) }
+                    try {
+                        // Bersihkan respons dari markdown block jika Gemini tidak taat aturan
+                        val cleanJson = output.replace("```json", "").replace("```", "").trim()
+                        
+                        val json = Json { ignoreUnknownKeys = true; isLenient = true }
+                        val items = json.decodeFromString<List<WorkoutItem>>(cleanJson)
+                        
+                        // Fetch GIF untuk setiap item
+                        val itemsWithGifs = items.map { item ->
+                            val gif = getExerciseGifUseCase(item.englishName)
+                            item.copy(gifUrl = gif)
+                        }
+                        
+                        _uiState.update { it.copy(isLoading = false, result = itemsWithGifs) }
+                    } catch (e: Exception) {
+                        _uiState.update { 
+                            it.copy(
+                                isLoading = false, 
+                                error = "Gagal memproses respons AI: ${e.message}"
+                            ) 
+                        }
+                    }
                 }
                 .onFailure { error ->
                     _uiState.update {

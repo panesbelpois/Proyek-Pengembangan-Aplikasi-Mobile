@@ -6,20 +6,25 @@ import com.example.fitgen.data.local.FitGenDatabase
 import com.example.fitgen.data.local.datastore.DataStoreFactory
 import com.example.fitgen.data.local.datastore.UserPreferences
 import com.example.fitgen.data.local.datastore.create
+import com.example.fitgen.data.remote.api.ExerciseApiService
 import com.example.fitgen.data.remote.api.GeminiService
+import com.example.fitgen.data.remote.api.GroqService
 import com.example.fitgen.data.repository.AIRepositoryImpl
 import com.example.fitgen.data.repository.BodyMetricRepositoryImpl
+import com.example.fitgen.data.repository.ExerciseImageRepositoryImpl
 import com.example.fitgen.data.repository.MealRepositoryImpl
 import com.example.fitgen.data.repository.WorkoutRepositoryImpl
 // Sprint 2: import com.example.fitgen.data.repository.GpsRepositoryImpl
 import com.example.fitgen.domain.repository.AIRepository
 import com.example.fitgen.domain.repository.BodyMetricRepository
+import com.example.fitgen.domain.repository.ExerciseImageRepository
 import com.example.fitgen.domain.repository.MealRepository
 import com.example.fitgen.domain.repository.WorkoutRepository
 // Sprint 2: import com.example.fitgen.domain.repository.GpsRepository
 import com.example.fitgen.domain.usecase.GetAllWorkoutsUseCase
 import com.example.fitgen.domain.usecase.GetDailyCaloriesUseCase
 import com.example.fitgen.domain.usecase.GetDailyWaterGlassesUseCase
+import com.example.fitgen.domain.usecase.GetExerciseGifUseCase
 import com.example.fitgen.domain.usecase.GetLoginStreakUseCase
 import com.example.fitgen.domain.usecase.LogMealUseCase
 import com.example.fitgen.domain.usecase.LogWorkoutUseCase
@@ -52,6 +57,8 @@ import org.koin.dsl.module
 val networkModule = module {
     single { HttpClientFactory.create(enableLogging = true) }
     singleOf(::GeminiService)
+    singleOf(::GroqService)
+    singleOf(::ExerciseApiService)
 }
 
 // ==================== DATABASE MODULE ====================
@@ -95,6 +102,9 @@ val repositoryModule = module {
     // --- Body Metric Repository (Sprint 2/3) ---
     // Menggunakan in-memory storage sementara (tidak butuh parameter database)
     single<BodyMetricRepository> { BodyMetricRepositoryImpl() }
+    
+    // --- Exercise Image Repository (Sprint 4) ---
+    singleOf(::ExerciseImageRepositoryImpl) bind ExerciseImageRepository::class
 }
 
 // ==================== USE CASE MODULE ====================
@@ -105,6 +115,7 @@ val useCaseModule = module {
     // --- AI Use Cases (Sprint 1) ---
     // singleOf(::GenerateWorkoutPlanUseCase)
     // singleOf(::AnalyzeNutritionUseCase)
+    singleOf(::GetExerciseGifUseCase)
 
     // --- Workout Use Cases (Sprint 2) ---
     singleOf(::GetAllWorkoutsUseCase)
@@ -137,7 +148,7 @@ val viewModelModule = module {
 
     // --- AI ViewModels ---
     viewModelOf(::AIAssistantViewModel)
-    viewModelOf(::DynamicWorkoutViewModel)
+    factory { DynamicWorkoutViewModel(get(), get()) }
 
     // --- Home ViewModel (Sprint 1) ---
     viewModelOf(::HomeViewModel)

@@ -1,12 +1,12 @@
 package com.example.fitgen.data.repository
 
-import com.example.fitgen.data.remote.api.GeminiService
+import com.example.fitgen.data.remote.api.GroqService
 import com.example.fitgen.data.remote.api.SystemPrompts
 import com.example.fitgen.domain.repository.AIRepository
 import com.example.fitgen.domain.repository.WritingStyle
 
 class AIRepositoryImpl(
-    private val geminiService: GeminiService
+    private val groqService: GroqService
 ) : AIRepository {
     
     override suspend fun summarize(text: String): Result<String> {
@@ -16,7 +16,7 @@ class AIRepositoryImpl(
             $text
         """.trimIndent()
         
-        return geminiService.generateContent(
+        return groqService.generateContent(
             prompt = prompt,
             systemPrompt = SystemPrompts.SUMMARIZER
         )
@@ -27,7 +27,7 @@ class AIRepositoryImpl(
             Berikan 5 ide kreatif untuk topik: $topic
         """.trimIndent()
         
-        return geminiService.generateContent(
+        return groqService.generateContent(
             prompt = prompt,
             systemPrompt = SystemPrompts.IDEA_GENERATOR
         ).map { response ->
@@ -57,7 +57,7 @@ class AIRepositoryImpl(
             $text
         """.trimIndent()
         
-        return geminiService.generateContent(
+        return groqService.generateContent(
             prompt = prompt,
             systemPrompt = SystemPrompts.WRITING_IMPROVER
         )
@@ -70,14 +70,14 @@ class AIRepositoryImpl(
             $text
         """.trimIndent()
         
-        return geminiService.generateContent(
+        return groqService.generateContent(
             prompt = prompt,
             systemPrompt = SystemPrompts.TRANSLATOR
         )
     }
     
     override suspend fun chat(message: String): Result<String> {
-        return geminiService.generateContent(prompt = message)
+        return groqService.generateContent(prompt = message)
     }
     
     override suspend fun suggestTitle(content: String): Result<String> {
@@ -87,7 +87,7 @@ class AIRepositoryImpl(
             $content
         """.trimIndent()
         
-        return geminiService.generateContent(
+        return groqService.generateContent(
             prompt = prompt,
             systemPrompt = SystemPrompts.TITLE_SUGGESTER
         ).map { it.trim().removeSurrounding("\"") }
