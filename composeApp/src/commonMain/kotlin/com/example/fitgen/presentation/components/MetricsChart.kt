@@ -1,41 +1,47 @@
-package com.example.fitgen.presentation.components
+package presentation.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MetricsChart(modifier: Modifier = Modifier) {
-    val maroon = Color(0xFF800000)
-
-    Column(modifier = modifier.fillMaxWidth()) {
-        Text("Grafik Berat Badan", color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
-        // Placeholder untuk Line Chart
-        Box(
-            modifier = Modifier.fillMaxWidth().height(150.dp)
-                .clip(RoundedCornerShape(8.dp)).background(Color(0xFF1E1E1E)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("[ Line Chart Area ]", color = maroon)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("Indikator BMI", color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
-        // Placeholder untuk Gauge BMI
-        Box(
-            modifier = Modifier.fillMaxWidth().height(100.dp)
-                .clip(RoundedCornerShape(8.dp)).background(Color(0xFF1E1E1E)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("[ BMI Gauge: 21.5 (Normal) ]", color = Color(0xFFFFB6C1)) // Aksen Pink
+fun WeightTrackerChart(weights: List) {
+    Text(text = "Grafik Berat Badan", style = MaterialTheme.typography.titleMedium)
+    Spacer(modifier = Modifier.height(8.dp))
+    Canvas(modifier = Modifier.fillMaxWidth().height(150.dp)) {
+        // Gambar diagram garis berat badan
+        val maxW = weights.maxOrNull() ?: 1f
+        val minW = weights.minOrNull() ?: 0f
+        val range = maxW - minW
+        val stepX = if (weights.size > 1) size.width / (weights.size - 1) else size.width
+        weights.forEachIndexed { i, w ->
+            val x = i * stepX
+            val y = size.height - ((w - minW) / range) * size.height
+            if (i < weights.size - 1) {
+                val nx = (i + 1) * stepX
+                val ny = size.height - ((weights[i + 1] - minW) / range) * size.height
+                drawLine(
+                    color = androidx.compose.ui.graphics.Color.Blue,
+                    start = androidx.compose.ui.geometry.Offset(x, y),
+                    end = androidx.compose.ui.geometry.Offset(nx, ny),
+                    strokeWidth = 3f
+                )
+            }
         }
     }
+}
+
+@Composable
+fun BmiGauge(bmi: Float) {
+    Text(text = "BMI: ${"%.1f".format(bmi)}", style = MaterialTheme.typography.titleMedium)
+    val status = when {
+        bmi < 18.5f -> "Underweight"
+        bmi < 25f   -> "Normal"
+        bmi < 30f   -> "Overweight"
+        else        -> "Obese"
+    }
+    Text(text = "Status: $status", style = MaterialTheme.typography.bodyMedium)
 }
