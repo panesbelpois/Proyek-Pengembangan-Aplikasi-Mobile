@@ -102,20 +102,18 @@ fun ProfileScreen(
                 contentPadding = PaddingValues(20.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                // 1. Top Section
                 item {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // TAMBAHAN: Box wrapper untuk menggabungkan foto profil dan ikon edit/upload
                         Box(contentAlignment = Alignment.BottomEnd) {
                             Box(
                                 modifier = Modifier
                                     .size(100.dp)
                                     .clip(CircleShape)
                                     .background(MaterialTheme.colorScheme.surfaceVariant)
-                                    .clickable { /* TODO: Trigger photo upload */ }, // TAMBAHAN: Fungsi klik untuk upload
+                                    .clickable { /* TODO: Trigger photo upload */ },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
@@ -125,8 +123,6 @@ fun ProfileScreen(
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-
-                            // TAMBAHAN: Ikon indikator bahwa foto bisa diubah
                             Box(
                                 modifier = Modifier
                                     .size(32.dp)
@@ -152,7 +148,6 @@ fun ProfileScreen(
                     }
                 }
 
-                // 2. Stats Row
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -162,72 +157,66 @@ fun ProfileScreen(
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp),
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
                         ) {
                             Column(
                                 modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(
-                                    "Total Calories",
+                                Text("Total Calories",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer)
                                 Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    "1,250",
+                                Text("1,250",
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer)
                             }
                         }
                         Card(
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp),
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
                         ) {
                             Column(
                                 modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(
-                                    "Active Minutes",
+                                Text("Active Minutes",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer)
                                 Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    "45",
+                                Text("45",
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer)
                             }
                         }
                     }
                 }
 
-                // 3. Body Metrics Section
                 item {
-                    Text(
-                        "Body Metrics",
+                    Text("Body Metrics",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
-                    )
+                        fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("Weight Tracker", style = MaterialTheme.typography.titleMedium)
+                            Text("Weight Tracker",
+                                style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(16.dp))
-                            // Placeholder chart
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -236,7 +225,8 @@ fun ProfileScreen(
                                     .background(MaterialTheme.colorScheme.surfaceVariant),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text("Chart Area", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("Chart Area",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                     }
@@ -245,12 +235,13 @@ fun ProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("BMI Gauge", style = MaterialTheme.typography.titleMedium)
+                            Text("BMI Gauge",
+                                style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(16.dp))
-                            // Placeholder Gauge
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -259,20 +250,18 @@ fun ProfileScreen(
                                     .background(MaterialTheme.colorScheme.surfaceVariant),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text("Gauge Area", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("Gauge Area",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                     }
                 }
 
-                // Form Fields
                 item {
-                    Text(
-                        "Identitas Dasar",
+                    Text("Identitas Dasar",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
-                    )
+                        fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     FitGenTextField(
                         value = uiState.name,
