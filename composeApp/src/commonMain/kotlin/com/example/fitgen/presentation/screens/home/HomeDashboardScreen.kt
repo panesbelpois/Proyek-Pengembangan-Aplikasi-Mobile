@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
@@ -55,14 +57,14 @@ fun HomeDashboardScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        topBar = { 
+        topBar = {
             TopAppBar(
                 title = { Text("FitGen — Dashboard") },
                 colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
-            ) 
+            )
         }
     ) { innerPadding ->
         if (uiState.isLoading) {
@@ -93,8 +95,8 @@ fun HomeDashboardScreen(
                     )
                 }
             }
-            
-            // 1. Daily Challenge Banner
+
+            // 1. Daily Challenge Banner (Sentuhan AI)
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -107,13 +109,13 @@ fun HomeDashboardScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Daily Challenge",
+                            text = "🔥 Daily AI Challenge",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Lakukan 50 Push-ups hari ini untuk mendapatkan lencana khusus!",
+                            text = "Lakukan 50 Push-ups hari ini untuk mendapatkan lencana khusus! AI memprediksi kamu bisa menyelesaikannya dalam 10 menit.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -180,35 +182,43 @@ fun HomeDashboardScreen(
                 }
             }
 
-            // 3. Quick Workout
+            // 3. Quick Workouts (Berubah menjadi Deretan Card / LazyRow)
             item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Quick Workouts",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    val quickCategories = listOf("🔥 15 Min HIIT", "💪 Upper Body", "🏃 Cardio", "🧘 Yoga", "🏠 Tanpa Alat")
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(vertical = 4.dp)
                     ) {
-                        Text(
-                            text = "Quick Workout",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Latihan 15 menit untuk seluruh tubuh.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Button(
-                            onClick = onNavigateToWorkout,
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                        ) {
-                            Text("Lihat Latihan")
+                        items(quickCategories) { category ->
+                            Card(
+                                onClick = onNavigateToWorkout,
+                                shape = RoundedCornerShape(12.dp),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                )
+                            ) {
+                                Box(
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = category,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -275,7 +285,7 @@ fun HomeDashboardScreen(
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
-                        
+
                         // Deretan ikon gelas, 8 gelas = target umum
                         val maxTarget = maxOf(8, uiState.waterGlassesToday)
                         Row(
@@ -329,13 +339,13 @@ fun HomeDashboardScreen(
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text = "Streak Aktif 🔥", 
+                                text = "Streak Aktif 🔥",
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
-                        
+
                         Text(
                             "${uiState.activeStreakDays} hari login berturut-turut!",
                             style = MaterialTheme.typography.bodyLarge,
@@ -377,7 +387,7 @@ private fun SummaryCard(title: String, content: @Composable () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = title, 
+                text = title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
