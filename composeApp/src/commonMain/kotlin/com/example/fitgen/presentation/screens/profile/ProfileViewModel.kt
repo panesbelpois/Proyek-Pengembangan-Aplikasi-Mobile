@@ -18,6 +18,7 @@ data class ProfileUiState(
     val height: String = "",
     val weight: String = "",
     val goal: String = "",
+    val weightHistory: List<Double> = emptyList(), // Menampung data riwayat berat badan
     val nameError: String? = null,
     val ageError: String? = null,
     val heightError: String? = null,
@@ -34,7 +35,6 @@ class ProfileViewModel(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    // Opsi tujuan (goals) standar
     val goalOptions = listOf(
         "Menurunkan Berat Badan",
         "Membangun Otot",
@@ -50,12 +50,20 @@ class ProfileViewModel(
     private fun loadProfile() {
         viewModelScope.launch {
             val profile = userPreferences.userProfile.first()
+            val currentWeight = profile.weightKg
+
+            // Membuat tren data awal berdasarkan berat badan yang tersimpan
+            val initialHistory = if (currentWeight > 0.0) {
+                listOf(currentWeight - 2.0, currentWeight - 1.5, currentWeight - 0.5, currentWeight)
+            } else emptyList()
+
             _uiState.update {
                 it.copy(
                     name = profile.name,
                     age = if (profile.age > 0) profile.age.toString() else "",
                     height = if (profile.heightCm > 0.0) profile.heightCm.toString() else "",
-                    weight = if (profile.weightKg > 0.0) profile.weightKg.toString() else "",
+                    weight = if (currentWeight > 0.0) currentWeight.toString() else "",
+                    weightHistory = initialHistory,
                     goal = profile.goal,
                     isLoading = false
                 )
@@ -89,7 +97,6 @@ class ProfileViewModel(
     fun saveProfile() {
         val state = _uiState.value
 
-        // Validasi hanya untuk input yang ada di UI saat ini
         val nameErr = if (state.name.isBlank()) "Nama tidak boleh kosong" else null
         val heightErr = validateDouble(state.height, "Tinggi badan")
         val weightErr = validateDouble(state.weight, "Berat badan")
@@ -108,20 +115,31 @@ class ProfileViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
 
+            val newWeight = state.weight.trim().toDoubleOrNull() ?: 0.0
             val profile = UserProfile(
                 name = state.name.trim(),
-                age = state.age.trim().toIntOrNull() ?: 0, // Diberi nilai default 0 karena belum ada di UI
+                age = state.age.trim().toIntOrNull() ?: 0,
                 heightCm = state.height.trim().toDoubleOrNull() ?: 0.0,
-                weightKg = state.weight.trim().toDoubleOrNull() ?: 0.0,
+                weightKg = newWeight,
                 goal = state.goal
             )
 
             userPreferences.saveUserProfile(profile)
 
-            // Sedikit delay simulasi save
+            // Masukkan angka berat badan baru ke dalam daftar grafik secara langsung
+            val updatedHistory = state.weightHistory.toMutableList().apply {
+                if (newWeight > 0.0) add(newWeight)
+            }
+
             delay(500)
 
-            _uiState.update { it.copy(isSaving = false, saveSuccess = true) }
+            _uiState.update {
+                it.copy(
+                    isSaving = false,
+                    saveSuccess = true,
+                    weightHistory = updatedHistory
+                )
+            }
         }
     }
 

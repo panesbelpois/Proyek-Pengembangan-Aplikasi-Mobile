@@ -1,5 +1,6 @@
 package com.example.fitgen.presentation.screens.profile
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,12 +43,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fitgen.presentation.components.FitGenPrimaryButton
 import com.example.fitgen.presentation.components.FitGenTextField
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -201,46 +208,55 @@ fun ProfileScreen(
                 }
 
                 item {
+                    val weightKgs = uiState.weight.toDoubleOrNull() ?: 0.0
+                    val heightCms = uiState.height.toDoubleOrNull() ?: 0.0
+                    val bmi = if (heightCms > 0 && weightKgs > 0) {
+                        weightKgs / ((heightCms / 100) * (heightCms / 100))
+                    } else 0.0
+
                     Text("Body Metrics",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
+
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface)
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("Weight Tracker",
-                                style = MaterialTheme.typography.titleMedium)
+                            Text("Weight Tracker", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(16.dp))
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(120.dp)
+                                    .height(150.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(MaterialTheme.colorScheme.surfaceVariant),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text("Chart Area",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                // Menggunakan data riwayat asli dari UiState
+                                if (uiState.weightHistory.isNotEmpty()) {
+                                    SimpleWeightChart(weightHistory = uiState.weightHistory)
+                                } else {
+                                    Text("Isi profil untuk melihat grafik", color = Color.Gray)
+                                }
                             }
                         }
                     }
+
                     Spacer(modifier = Modifier.height(16.dp))
+
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface)
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("BMI Gauge",
-                                style = MaterialTheme.typography.titleMedium)
+                            Text("BMI Indicator", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(16.dp))
                             Box(
                                 modifier = Modifier
@@ -250,11 +266,9 @@ fun ProfileScreen(
                                     .background(MaterialTheme.colorScheme.surfaceVariant),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text("Gauge Area",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                BmiGaugeMeter(bmi = bmi)
                             }
-                        }
-                    }
+                        }                    }
                 }
 
                 item {
@@ -295,5 +309,83 @@ fun ProfileScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SimpleWeightChart(weightHistory: List<Double>) {
+    val maxWeight = weightHistory.maxOrNull() ?: 100.0
+    val minWeight = weightHistory.minOrNull() ?: 0.0
+    val chartColor = Color(0xFFE91E63) // Pink Accent
+
+    Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        val width = size.width
+        val height = size.height
+        val stepX = width / (weightHistory.size - 1).coerceAtLeast(1)
+        val rangeY = (maxWeight - minWeight).coerceAtLeast(1.0)
+
+        val path = Path()
+
+        weightHistory.forEachIndexed { index, weight ->
+            val x = index * stepX
+            val y = height - (((weight - minWeight) / rangeY) * height).toFloat()
+
+            if (index == 0) {
+                path.moveTo(x, y)
+            } else {
+                path.lineTo(x, y)
+            }
+
+            drawCircle(
+                color = chartColor,
+                radius = 6.dp.toPx(),
+                center = Offset(x, y)
+            )
+        }
+
+        if (weightHistory.size > 1) {
+            drawPath(
+                path = path,
+                color = chartColor,
+                style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
+            )
+        }
+    }
+}
+
+@Composable
+fun BmiGaugeMeter(bmi: Double) {
+    val category = when {
+        bmi == 0.0 -> "Belum ada data"
+        bmi < 18.5 -> "Kekurangan Berat"
+        bmi in 18.5..24.9 -> "Normal"
+        bmi in 25.0..29.9 -> "Berlebih"
+        else -> "Obesitas"
+    }
+
+    val gaugeColor = when {
+        bmi == 0.0 -> Color.Gray
+        bmi < 18.5 -> Color(0xFF2196F3)
+        bmi in 18.5..24.9 -> Color(0xFF4CAF50)
+        bmi in 25.0..29.9 -> Color(0xFFFFC107)
+        else -> Color(0xFFF44336)
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = if (bmi > 0) ((bmi * 10.0).roundToInt() / 10.0).toString() else "--",
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            color = gaugeColor
+        )
+        Text(
+            text = category,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
