@@ -14,13 +14,11 @@ import com.example.fitgen.data.repository.BodyMetricRepositoryImpl
 import com.example.fitgen.data.repository.ExerciseImageRepositoryImpl
 import com.example.fitgen.data.repository.MealRepositoryImpl
 import com.example.fitgen.data.repository.WorkoutRepositoryImpl
-// Sprint 2: import com.example.fitgen.data.repository.GpsRepositoryImpl
 import com.example.fitgen.domain.repository.AIRepository
 import com.example.fitgen.domain.repository.BodyMetricRepository
 import com.example.fitgen.domain.repository.ExerciseImageRepository
 import com.example.fitgen.domain.repository.MealRepository
 import com.example.fitgen.domain.repository.WorkoutRepository
-// Sprint 2: import com.example.fitgen.domain.repository.GpsRepository
 import com.example.fitgen.domain.usecase.GetAllWorkoutsUseCase
 import com.example.fitgen.domain.usecase.GetDailyCaloriesUseCase
 import com.example.fitgen.domain.usecase.GetDailyWaterGlassesUseCase
@@ -30,8 +28,7 @@ import com.example.fitgen.domain.usecase.LogMealUseCase
 import com.example.fitgen.domain.usecase.LogWorkoutUseCase
 import com.example.fitgen.domain.usecase.UpdateLoginStreakUseCase
 import com.example.fitgen.domain.usecase.AddWaterGlassUseCase
-// Sprint 2: import com.example.fitgen.domain.usecase.gps.*
-// Sprint 3: import com.example.fitgen.domain.usecase.bodymetric.*
+import com.example.fitgen.domain.usecase.AnalyzeFoodNutritionUseCase
 import com.example.fitgen.presentation.screens.home.HomeDashboardViewModel
 import com.example.fitgen.presentation.screens.home.HomeViewModel
 import com.example.fitgen.presentation.screens.nutrition.AddMealViewModel
@@ -41,8 +38,7 @@ import com.example.fitgen.presentation.screens.workout.AddWorkoutViewModel
 import com.example.fitgen.presentation.screens.workout.WorkoutListViewModel
 import com.example.fitgen.presentation.screens.ai.AIAssistantViewModel
 import com.example.fitgen.presentation.screens.ai.DynamicWorkoutViewModel
-// Sprint 2: import com.example.fitgen.presentation.screens.gps.GpsViewModel
-// Sprint 3: import com.example.fitgen.presentation.screens.bodymetric.BodyMetricViewModel
+import io.ktor.client.HttpClient
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -52,19 +48,17 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 // ==================== NETWORK MODULE ====================
-// Menyediakan HttpClient (Ktor) dan GeminiService untuk fitur AI.
-
 val networkModule = module {
-    single { HttpClientFactory.create(enableLogging = true) }
-    singleOf(::GeminiService)
+    // Berikan tipe spesifik <HttpClient> agar dependency terdeteksi
+    single<HttpClient> { HttpClientFactory.create(enableLogging = true) }
+
+    // Inject HttpClient secara eksplisit ke GeminiService
+    single { GeminiService(get<HttpClient>()) }
     singleOf(::GroqService)
     singleOf(::ExerciseApiService)
 }
 
 // ==================== DATABASE MODULE ====================
-// Menyediakan FitGenDatabase (SQLDelight) untuk semua fitur offline.
-// DatabaseDriverFactory disediakan per-platform (androidMain / iosMain).
-
 val databaseModule = module {
     single {
         val driverFactory: DatabaseDriverFactory = get()
@@ -73,112 +67,56 @@ val databaseModule = module {
 }
 
 // ==================== PREFERENCES MODULE ====================
-// Menyediakan DataStore untuk menyimpan preferensi user (unit sistem, profil, dll).
-
 val preferencesModule = module {
     single { get<DataStoreFactory>().create() }
     single { UserPreferences(get()) }
 }
 
 // ==================== REPOSITORY MODULE ====================
-// Semua repository diikat ke interface-nya menggunakan singleOf(...) bind Interface::class
-// agar bisa di-swap saat testing (dependency inversion principle).
-
 val repositoryModule = module {
+    // Jika singleOf melempar error "None of the following candidates...",
+    // gunakan inisialisasi manual seperti ini agar Koin tidak bingung
+    single<AIRepository> { AIRepositoryImpl(get(), get()) } // Sesuaikan jumlah get() dengan parameter di AIRepositoryImpl
 
-    // --- AI Repository (Sprint 1) ---
-    singleOf(::AIRepositoryImpl) bind AIRepository::class
-
-    // --- Workout Repository (Sprint 2) ---
     singleOf(::WorkoutRepositoryImpl) bind WorkoutRepository::class
-
-    // --- Meal / Nutrition Repository (Sprint 2) ---
-    // Menggunakan in-memory storage sementara (tidak butuh parameter database)
     single<MealRepository> { MealRepositoryImpl() }
-
-    // --- GPS Activity Repository (Sprint 2) ---
-    // singleOf(::GpsRepositoryImpl) bind GpsRepository::class
-
-    // --- Body Metric Repository (Sprint 2/3) ---
-    // Menggunakan in-memory storage sementara (tidak butuh parameter database)
     single<BodyMetricRepository> { BodyMetricRepositoryImpl() }
-    
-    // --- Exercise Image Repository (Sprint 4) ---
     singleOf(::ExerciseImageRepositoryImpl) bind ExerciseImageRepository::class
 }
 
 // ==================== USE CASE MODULE ====================
-// Setiap Use Case mewakili satu aksi bisnis spesifik (Single Responsibility).
-
 val useCaseModule = module {
-
-    // --- AI Use Cases (Sprint 1) ---
-    // singleOf(::GenerateWorkoutPlanUseCase)
-    // singleOf(::AnalyzeNutritionUseCase)
     singleOf(::GetExerciseGifUseCase)
 
-    // --- Workout Use Cases (Sprint 2) ---
+    // Berikan tipe eksplisit pada UseCase analisis makanan agar get() terarah
+    single { AnalyzeFoodNutritionUseCase(get<AIRepository>()) }
+
     singleOf(::GetAllWorkoutsUseCase)
     singleOf(::LogWorkoutUseCase)
-    
-    // --- Meal / Nutrition Use Cases (Sprint 2) ---
+
     singleOf(::LogMealUseCase)
     singleOf(::GetDailyCaloriesUseCase)
-    
+
     factory { UpdateLoginStreakUseCase(get()) }
     factory { GetLoginStreakUseCase(get()) }
     factory { AddWaterGlassUseCase(get()) }
     factory { GetDailyWaterGlassesUseCase(get()) }
-    
-    // --- GPS Activity Use Cases (Sprint 2) ---
-    // singleOf(::StartGpsTrackingUseCase)
-    // singleOf(::StopGpsTrackingUseCase)
-    // singleOf(::GetActivityHistoryUseCase)
-
-    // --- Body Metric Use Cases (Sprint 3) ---
-    // singleOf(::SaveBodyMetricUseCase)
-    // singleOf(::GetBodyMetricHistoryUseCase)
-    // singleOf(::GetLatestBodyMetricUseCase)
 }
 
 // ==================== VIEWMODEL MODULE ====================
-// ViewModel di-inject menggunakan viewModelOf() agar lifecycle-aware.
-
 val viewModelModule = module {
-
-    // --- AI ViewModels ---
     viewModelOf(::AIAssistantViewModel)
     factory { DynamicWorkoutViewModel(get(), get()) }
-
-    // --- Home ViewModel (Sprint 1) ---
     viewModelOf(::HomeViewModel)
-
-    // --- Dashboard ViewModel (Sprint 2) ---
     viewModelOf(::HomeDashboardViewModel)
-
-    // --- Workout ViewModel (Sprint 2) ---
     viewModelOf(::WorkoutListViewModel)
     viewModelOf(::AddWorkoutViewModel)
-
-    // --- Nutrition ViewModel (Sprint 2) ---
     viewModelOf(::NutritionViewModel)
     viewModelOf(::AddMealViewModel)
-
-    // --- Profile ViewModel (Sprint 3) ---
     viewModelOf(::ProfileViewModel)
-
-    // --- GPS ViewModel (Sprint 2) ---
-    // viewModelOf(::GpsViewModel)
-
-    // --- Body Metric ViewModel (Sprint 3) ---
-    // viewModelOf(::BodyMetricViewModel)
 }
 
 // ==================== SHARED MODULES ====================
-// Daftar semua modul yang digunakan bersama oleh Android dan iOS.
-// Platform-specific modules (mis. DatabaseDriverFactory) didaftarkan
-// terpisah di masing-masing platform lewat parameter `platformModules`.
-
 val sharedModules: List<Module> = listOf(
     networkModule,
     databaseModule,
@@ -189,9 +127,6 @@ val sharedModules: List<Module> = listOf(
 )
 
 // ==================== INIT FUNCTION ====================
-// Dipanggil dari entry point platform (MainActivity / iOSApp).
-// platformModules berisi binding platform-specific seperti DatabaseDriverFactory.
-
 fun initKoin(
     platformModules: List<Module> = emptyList(),
     config: KoinAppDeclaration? = null

@@ -96,7 +96,7 @@ fun HomeDashboardScreen(
                 }
             }
 
-            // 1. Daily Challenge Banner (Sentuhan AI)
+            // 1. Daily Challenge Banner (AI)
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -122,7 +122,9 @@ fun HomeDashboardScreen(
                         Button(
                             onClick = { /* TODO */ },
                             shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            )
                         ) {
                             Text("Mulai Sekarang")
                         }
@@ -142,9 +144,7 @@ fun HomeDashboardScreen(
                     )
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
@@ -182,7 +182,7 @@ fun HomeDashboardScreen(
                 }
             }
 
-            // 3. Quick Workouts (Berubah menjadi Deretan Card / LazyRow)
+            // 3. Quick Workouts — LazyRow card kategori
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
@@ -191,9 +191,13 @@ fun HomeDashboardScreen(
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
-
-                    val quickCategories = listOf("🔥 15 Min HIIT", "💪 Upper Body", "🏃 Cardio", "🧘 Yoga", "🏠 Tanpa Alat")
-
+                    val quickCategories = listOf(
+                        "🔥 15 Min HIIT",
+                        "💪 Upper Body",
+                        "🏃 Cardio",
+                        "🧘 Yoga",
+                        "🏠 Tanpa Alat"
+                    )
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         contentPadding = PaddingValues(vertical = 4.dp)
@@ -285,8 +289,6 @@ fun HomeDashboardScreen(
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
-
-                        // Deretan ikon gelas, 8 gelas = target umum
                         val maxTarget = maxOf(8, uiState.waterGlassesToday)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -295,20 +297,22 @@ fun HomeDashboardScreen(
                             for (i in 1..maxTarget) {
                                 val isFilled = i <= uiState.waterGlassesToday
                                 Icon(
-                                    imageVector = if (isFilled) Icons.Filled.LocalDrink else Icons.Outlined.LocalDrink,
+                                    imageVector = if (isFilled) Icons.Filled.LocalDrink
+                                    else Icons.Outlined.LocalDrink,
                                     contentDescription = null,
-                                    tint = if (isFilled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                    tint = if (isFilled) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.outline,
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
                         }
-
                         Button(
                             onClick = viewModel::addWater,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Icon(Icons.Filled.LocalDrink, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Icon(Icons.Filled.LocalDrink, contentDescription = null,
+                                modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
                             Text("Minum 1 Gelas")
                         }
@@ -319,7 +323,7 @@ fun HomeDashboardScreen(
             // Streak Aktif
             item {
                 Card(
-                    modifier  = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     colors = CardDefaults.cardColors(
@@ -345,7 +349,6 @@ fun HomeDashboardScreen(
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
-
                         Text(
                             "${uiState.activeStreakDays} hari login berturut-turut!",
                             style = MaterialTheme.typography.bodyLarge,
@@ -377,7 +380,7 @@ fun HomeDashboardScreen(
 @Composable
 private fun SummaryCard(title: String, content: @Composable () -> Unit) {
     Card(
-        modifier  = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)

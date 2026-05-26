@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.fitgen.domain.model.MealLog
 import com.example.fitgen.domain.model.MealType
 import com.example.fitgen.domain.usecase.LogMealUseCase
+import com.example.fitgen.domain.usecase.AnalyzeFoodNutritionUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,10 @@ data class AddMealUiState(
     val errorMessage: String?    = null
 )
 
-class AddMealViewModel(private val logMealUseCase: LogMealUseCase) : ViewModel() {
+class AddMealViewModel(
+    private val logMealUseCase: LogMealUseCase,
+    private val analyzeFoodNutritionUseCase: AnalyzeFoodNutritionUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddMealUiState())
     val uiState: StateFlow<AddMealUiState> = _uiState.asStateFlow()
@@ -35,6 +39,36 @@ class AddMealViewModel(private val logMealUseCase: LogMealUseCase) : ViewModel()
     fun onLemakChanged(value: String)       = _uiState.update { it.copy(lemakInput = value) }
     fun onJenisMakanChanged(type: MealType) = _uiState.update { it.copy(jenisMakan = type) }
     fun clearError()                        = _uiState.update { it.copy(errorMessage = null) }
+
+    fun analyzeFoodWithAI(imageBytes: ByteArray) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+
+            val result = analyzeFoodNutritionUseCase(imageBytes)
+
+            result.fold(
+                onSuccess = { nutritionData ->
+                    _uiState.update { state ->
+                        state.copy(
+                            // UPDATE: Langsung gunakan nama dari hasil tebakan AI!
+                            namaMakanan = nutritionData.nama,
+                            kaloriInput = nutritionData.kalori.toString(),
+                            proteinInput = nutritionData.protein.toString(),
+                            karbohidratInput = nutritionData.karbohidrat.toString(),
+                            lemakInput = nutritionData.lemak.toString(),
+                            isLoading = false
+                        )
+                    }
+                },
+                onFailure = { error ->
+                    _uiState.update { it.copy(
+                        isLoading = false,
+                        errorMessage = "Gagal menganalisis gambar: ${error.message}"
+                    ) }
+                }
+            )
+        }
+    }
 
     fun saveMeal() {
         val state  = _uiState.value

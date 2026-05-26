@@ -1,6 +1,6 @@
 package com.example.fitgen.data.remote.api
 
-import com.example.fitgen.BuildConfig
+import com.example.fitgen.BuildKonfig
 import com.example.fitgen.core.network.NetworkResult
 import com.example.fitgen.core.network.safeApiCall
 import com.example.fitgen.data.remote.dto.ExerciseDto
@@ -18,7 +18,7 @@ class ExerciseApiService(
     suspend fun searchExerciseByName(name: String): NetworkResult<List<ExerciseDto>> {
         return safeApiCall {
             val response = httpClient.get("https://exercisedb.p.rapidapi.com/exercises/name/$name") {
-                header("X-RapidAPI-Key", BuildConfig.RAPID_API_KEY)
+                header("X-RapidAPI-Key", BuildKonfig.RAPID_API_KEY)
                 header("X-RapidAPI-Host", "exercisedb.p.rapidapi.com")
             }
             response.body<List<ExerciseDto>>()

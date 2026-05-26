@@ -1,6 +1,6 @@
 package com.example.fitgen.data.remote.api
 
-import com.example.fitgen.BuildConfig
+import com.example.fitgen.BuildKonfig
 import com.example.fitgen.data.remote.dto.GroqChatRequest
 import com.example.fitgen.data.remote.dto.GroqChatResponse
 import com.example.fitgen.data.remote.dto.GroqMessage
@@ -55,7 +55,7 @@ class GroqService(private val client: HttpClient) {
         
         val httpResponse: HttpResponse = client.post(BASE_URL) {
             contentType(ContentType.Application.Json)
-            header("Authorization", "Bearer ${BuildConfig.GROQ_API_KEY}")
+            header("Authorization", "Bearer ${BuildKonfig.GROQ_API_KEY}")
             setBody(request)
         }
         
