@@ -89,17 +89,15 @@ class ProfileViewModel(
     fun saveProfile() {
         val state = _uiState.value
 
-        // Validasi
+        // Validasi hanya untuk input yang ada di UI saat ini
         val nameErr = if (state.name.isBlank()) "Nama tidak boleh kosong" else null
-        val ageErr = validateInt(state.age, "Umur")
         val heightErr = validateDouble(state.height, "Tinggi badan")
         val weightErr = validateDouble(state.weight, "Berat badan")
 
-        if (nameErr != null || ageErr != null || heightErr != null || weightErr != null) {
+        if (nameErr != null || heightErr != null || weightErr != null) {
             _uiState.update {
                 it.copy(
                     nameError = nameErr,
-                    ageError = ageErr,
                     heightError = heightErr,
                     weightError = weightErr
                 )
@@ -109,20 +107,20 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
-            
+
             val profile = UserProfile(
                 name = state.name.trim(),
-                age = state.age.trim().toIntOrNull() ?: 0,
+                age = state.age.trim().toIntOrNull() ?: 0, // Diberi nilai default 0 karena belum ada di UI
                 heightCm = state.height.trim().toDoubleOrNull() ?: 0.0,
                 weightKg = state.weight.trim().toDoubleOrNull() ?: 0.0,
                 goal = state.goal
             )
-            
+
             userPreferences.saveUserProfile(profile)
-            
+
             // Sedikit delay simulasi save
             delay(500)
-            
+
             _uiState.update { it.copy(isSaving = false, saveSuccess = true) }
         }
     }
