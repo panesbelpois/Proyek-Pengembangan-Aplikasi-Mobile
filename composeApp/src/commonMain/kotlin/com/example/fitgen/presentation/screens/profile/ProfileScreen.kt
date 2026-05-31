@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -120,7 +122,7 @@ fun ProfileScreen(
                                     .size(100.dp)
                                     .clip(CircleShape)
                                     .background(MaterialTheme.colorScheme.surfaceVariant)
-                                    .clickable { /* TODO: Trigger photo upload */ },
+                                    .clickable { },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
@@ -176,10 +178,12 @@ fun ProfileScreen(
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer)
                                 Spacer(modifier = Modifier.height(4.dp))
-                                Text("1,250",
+                                Text(
+                                    text = uiState.totalCalories.toString(),
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer)
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
                             }
                         }
                         Card(
@@ -198,10 +202,12 @@ fun ProfileScreen(
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer)
                                 Spacer(modifier = Modifier.height(4.dp))
-                                Text("45",
+                                Text(
+                                    text = uiState.activeMinutes.toString(),
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer)
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
                             }
                         }
                     }
@@ -237,7 +243,6 @@ fun ProfileScreen(
                                     .background(MaterialTheme.colorScheme.surfaceVariant),
                                 contentAlignment = Alignment.Center
                             ) {
-                                // Menggunakan data riwayat asli dari UiState
                                 if (uiState.weightHistory.isNotEmpty()) {
                                     SimpleWeightChart(weightHistory = uiState.weightHistory)
                                 } else {
@@ -261,7 +266,7 @@ fun ProfileScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(100.dp)
+                                    .height(140.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(MaterialTheme.colorScheme.surfaceVariant),
                                 contentAlignment = Alignment.Center
@@ -372,19 +377,62 @@ fun BmiGaugeMeter(bmi: Double) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = if (bmi > 0) ((bmi * 10.0).roundToInt() / 10.0).toString() else "--",
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            color = gaugeColor
-        )
+        Box(
+            modifier = Modifier.size(160.dp, 70.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val strokeWidth = 14.dp.toPx()
+                val topLeft = Offset(strokeWidth / 2, strokeWidth / 2)
+                val canvasSize = Size(size.width - strokeWidth, (size.height * 2) - strokeWidth)
+
+                drawArc(
+                    color = Color.LightGray.copy(alpha = 0.3f),
+                    startAngle = 180f,
+                    sweepAngle = 180f,
+                    useCenter = false,
+                    topLeft = topLeft,
+                    size = canvasSize,
+                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                )
+
+                if (bmi > 0.0) {
+                    val maxBmiValue = 40.0
+                    val minBmiValue = 15.0
+                    val clampedBmi = bmi.coerceIn(minBmiValue, maxBmiValue)
+                    val progress = (clampedBmi - minBmiValue) / (maxBmiValue - minBmiValue)
+                    val targetSweepAngle = (progress * 180f).toFloat()
+
+                    drawArc(
+                        color = gaugeColor,
+                        startAngle = 180f,
+                        sweepAngle = targetSweepAngle,
+                        useCenter = false,
+                        topLeft = topLeft,
+                        size = canvasSize,
+                        style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                    )
+                }
+            }
+
+            Text(
+                text = if (bmi > 0) ((bmi * 10.0).roundToInt() / 10.0).toString() else "--",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = if (bmi > 0.0) gaugeColor else Color.Gray,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = category,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
