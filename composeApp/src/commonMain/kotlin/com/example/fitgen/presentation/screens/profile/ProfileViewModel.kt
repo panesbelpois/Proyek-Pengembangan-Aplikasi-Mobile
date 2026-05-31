@@ -18,7 +18,9 @@ data class ProfileUiState(
     val height: String = "",
     val weight: String = "",
     val goal: String = "",
-    val weightHistory: List<Double> = emptyList(), // Menampung data riwayat berat badan
+    val weightHistory: List<Double> = emptyList(),
+    val totalCalories: Int = 0,
+    val activeMinutes: Int = 0,
     val nameError: String? = null,
     val ageError: String? = null,
     val heightError: String? = null,
@@ -52,7 +54,6 @@ class ProfileViewModel(
             val profile = userPreferences.userProfile.first()
             val currentWeight = profile.weightKg
 
-            // Membuat tren data awal berdasarkan berat badan yang tersimpan
             val initialHistory = if (currentWeight > 0.0) {
                 listOf(currentWeight - 2.0, currentWeight - 1.5, currentWeight - 0.5, currentWeight)
             } else emptyList()
@@ -64,6 +65,8 @@ class ProfileViewModel(
                     height = if (profile.heightCm > 0.0) profile.heightCm.toString() else "",
                     weight = if (currentWeight > 0.0) currentWeight.toString() else "",
                     weightHistory = initialHistory,
+                    totalCalories = 1250,
+                    activeMinutes = 45,
                     goal = profile.goal,
                     isLoading = false
                 )
@@ -126,7 +129,6 @@ class ProfileViewModel(
 
             userPreferences.saveUserProfile(profile)
 
-            // Masukkan angka berat badan baru ke dalam daftar grafik secara langsung
             val updatedHistory = state.weightHistory.toMutableList().apply {
                 if (newWeight > 0.0) add(newWeight)
             }
