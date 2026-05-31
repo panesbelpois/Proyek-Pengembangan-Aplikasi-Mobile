@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.FitnessCenter
 import androidx.compose.material.icons.automirrored.outlined.Sort
@@ -40,6 +41,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -64,6 +67,7 @@ import com.example.fitgen.presentation.components.ErrorState
 import com.example.fitgen.presentation.components.LoadingIndicator
 import kotlinx.datetime.LocalDate
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,6 +79,7 @@ fun WorkoutListScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentSortBy by viewModel.sortBy.collectAsStateWithLifecycle()
     var showSortMenu by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -121,44 +126,89 @@ fun WorkoutListScreen(
             }
         }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when (val state = uiState) {
-                is WorkoutListUiState.Loading -> {
-                    LoadingIndicator()
-                }
-
-                is WorkoutListUiState.Success -> {
-                    WorkoutLogList(
-                        workouts = state.workouts,
-                        onItemClick = onNavigateToDetail,
-                        onDeleteClick = viewModel::deleteWorkout
+            // Interactive Search Bar Area
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                placeholder = { Text("Cari gerakan atau catatan...") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Cari"
                     )
-                }
+                },
+                shape = RoundedCornerShape(12.dp),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                )
+            )
 
-                is WorkoutListUiState.Empty -> {
-                    EmptyState(
-                        title = "Belum Ada Sesi Latihan",
-                        message = "Tap + untuk mencatat sesi latihanmu",
-                        icon = {
-                            Icon(
-                                Icons.Outlined.FitnessCenter,
-                                contentDescription = null,
-                                modifier = Modifier.size(64.dp),
-                                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+            Box(modifier = Modifier.fillMaxSize()) {
+                when (val state = uiState) {
+                    is WorkoutListUiState.Loading -> {
+                        LoadingIndicator()
+                    }
+
+                    is WorkoutListUiState.Success -> {
+                        // Memfilter log latihan berdasarkan nama gerakan atau isi catatan
+                        val filteredWorkouts = state.workouts.filter { workout ->
+                            workout.catatan.contains(searchQuery, ignoreCase = true) ||
+                                    workout.gerakan.any { it.nama.contains(searchQuery, ignoreCase = true) }
+                        }
+
+                        if (filteredWorkouts.isEmpty() && searchQuery.isNotBlank()) {
+                            EmptyState(
+                                title = "Hasil Tidak Ditemukan",
+                                message = "Tidak ada sesi latihan yang cocok dengan '$searchQuery'",
+                                icon = {
+                                    Icon(
+                                        Icons.Outlined.FitnessCenter,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(64.dp),
+                                        tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                                    )
+                                }
+                            )
+                        } else {
+                            WorkoutLogList(
+                                workouts = filteredWorkouts,
+                                onItemClick = onNavigateToDetail,
+                                onDeleteClick = viewModel::deleteWorkout
                             )
                         }
-                    )
-                }
+                    }
 
-                is WorkoutListUiState.Error -> {
-                    ErrorState(
-                        message = state.message,
-                        onRetry = { viewModel.onSortByChanged(WorkoutSortBy.TANGGAL_TERBARU) }
-                    )
+                    is WorkoutListUiState.Empty -> {
+                        EmptyState(
+                            title = "Belum Ada Sesi Latihan",
+                            message = "Tap + untuk mencatat sesi latihanmu",
+                            icon = {
+                                Icon(
+                                    Icons.Outlined.FitnessCenter,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(64.dp),
+                                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                )
+                            }
+                        )
+                    }
+
+                    is WorkoutListUiState.Error -> {
+                        ErrorState(
+                            message = state.message,
+                            onRetry = { viewModel.onSortByChanged(WorkoutSortBy.TANGGAL_TERBARU) }
+                        )
+                    }
                 }
             }
         }
@@ -220,7 +270,6 @@ private fun WorkoutLogCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // ── Header: tanggal + tombol delete ──
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -266,7 +315,6 @@ private fun WorkoutLogCard(
             HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
             Spacer(modifier = Modifier.height(12.dp))
 
-            // ── Stats chips ──
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 StatChip(
                     icon = Icons.Default.FitnessCenter,
@@ -277,14 +325,14 @@ private fun WorkoutLogCard(
                     label = "${workout.totalSets} sets"
                 )
                 if (workout.totalVolume > 0.0) {
+                    val roundedVolume = (workout.totalVolume * 10).roundToInt() / 10.0
                     StatChip(
                         icon = Icons.Default.FitnessCenter,
-                        label = "${"%.1f".format(workout.totalVolume)} kg"
+                        label = "$roundedVolume kg"
                     )
                 }
             }
 
-            // ── Daftar gerakan (preview 3 teratas) ──
             if (workout.gerakan.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(10.dp))
                 workout.gerakan.take(3).forEach { exercise ->
@@ -327,7 +375,6 @@ private fun WorkoutLogCard(
                 }
             }
 
-            // ── Catatan (jika ada) ──
             if (workout.catatan.isNotBlank()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -401,10 +448,6 @@ private fun WorkoutSortDropdownMenu(
         }
     }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────────────────────
 
 private fun formatTanggal(date: LocalDate): String {
     val bulan = listOf(
