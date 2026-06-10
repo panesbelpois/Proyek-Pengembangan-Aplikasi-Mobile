@@ -50,7 +50,38 @@ fun NutritionScreen(
         }
     }
 
+    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    val months = listOf("Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des")
+    val dateString = "${today.dayOfMonth} ${months[today.monthNumber - 1]} ${today.year}"
+
     Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.height(90.dp),
+                title = {
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Nutrisi Anda",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        Text(
+                            text = "Hari ini, $dateString",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(bottom = 20.dp)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
+            )
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
@@ -66,12 +97,9 @@ fun NutritionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            contentPadding = PaddingValues(bottom = 100.dp) // Extra padding for bottom nav & FAB
+            contentPadding = PaddingValues(top = 24.dp, bottom = 100.dp) // Extra padding for top gap & bottom nav
         ) {
-            // Header
-            item {
-                NutritionHeader()
-            }
+            // Top Header has been moved to TopAppBar
 
             // Calorie & Macros Dashboard
             item {
@@ -140,30 +168,6 @@ fun NutritionScreen(
     }
 }
 
-@Composable
-private fun NutritionHeader() {
-    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    val months = listOf("Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des")
-    val dateString = "${today.dayOfMonth} ${months[today.monthNumber - 1]} ${today.year}"
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 24.dp)
-    ) {
-        Text(
-            text = "Nutrisi Anda",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.ExtraBold,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Text(
-            text = "Hari ini, $dateString",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
 
 @Composable
 private fun CalorieDashboardCard(
