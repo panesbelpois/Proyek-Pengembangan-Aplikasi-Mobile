@@ -95,8 +95,8 @@ fun HomeDashboardScreen(
             // ─── 1. Greeting Header ───────────────────────────────────────────
             item {
                 GreetingHeader(
-                    userName        = uiState.userName,
-                    activeStreak    = uiState.activeStreakDays
+                    userName     = uiState.userName,
+                    activeStreak = uiState.activeStreakDays
                 )
             }
 
@@ -253,7 +253,7 @@ private fun GreetingHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = 22.dp, bottom = 8.dp),
+            .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

@@ -12,12 +12,15 @@ import androidx.compose.material.icons.outlined.RestaurantMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -61,10 +64,21 @@ fun AppNavHost(
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
+                val maroon      = Color(0xFF800000)
+                val maroonDark  = Color(0xFF5A0000)
+                NavigationBar(
+                    containerColor = maroon
+                ) {
                     NavigationBarItem(
                         selected = currentDestination?.hasRoute(Route.Home::class) == true,
                         onClick  = { navigationActions.navigateToHome() },
+                        colors   = NavigationBarItemDefaults.colors(
+                            selectedIconColor   = Color.White,
+                            selectedTextColor   = Color.White,
+                            unselectedIconColor = Color.White.copy(alpha = 0.55f),
+                            unselectedTextColor = Color.White.copy(alpha = 0.55f),
+                            indicatorColor      = maroonDark
+                        ),
                         icon = {
                             Icon(
                                 if (currentDestination?.hasRoute(Route.Home::class) == true)
@@ -72,11 +86,18 @@ fun AppNavHost(
                                 contentDescription = "Beranda"
                             )
                         },
-                        label = { Text("Beranda") }
+                        label = { Text("Beranda", fontWeight = if (currentDestination?.hasRoute(Route.Home::class) == true) FontWeight.Bold else FontWeight.Normal) }
                     )
                     NavigationBarItem(
                         selected = currentDestination?.hasRoute(Route.WorkoutList::class) == true,
                         onClick  = { navigationActions.navigateToWorkoutList() },
+                        colors   = NavigationBarItemDefaults.colors(
+                            selectedIconColor   = Color.White,
+                            selectedTextColor   = Color.White,
+                            unselectedIconColor = Color.White.copy(alpha = 0.55f),
+                            unselectedTextColor = Color.White.copy(alpha = 0.55f),
+                            indicatorColor      = maroonDark
+                        ),
                         icon = {
                             Icon(
                                 if (currentDestination?.hasRoute(Route.WorkoutList::class) == true)
@@ -84,11 +105,18 @@ fun AppNavHost(
                                 contentDescription = "Latihan"
                             )
                         },
-                        label = { Text("Latihan") }
+                        label = { Text("Latihan", fontWeight = if (currentDestination?.hasRoute(Route.WorkoutList::class) == true) FontWeight.Bold else FontWeight.Normal) }
                     )
                     NavigationBarItem(
                         selected = currentDestination?.hasRoute(Route.Nutrition::class) == true,
                         onClick  = { navigationActions.navigateToNutrition() },
+                        colors   = NavigationBarItemDefaults.colors(
+                            selectedIconColor   = Color.White,
+                            selectedTextColor   = Color.White,
+                            unselectedIconColor = Color.White.copy(alpha = 0.55f),
+                            unselectedTextColor = Color.White.copy(alpha = 0.55f),
+                            indicatorColor      = maroonDark
+                        ),
                         icon = {
                             Icon(
                                 if (currentDestination?.hasRoute(Route.Nutrition::class) == true)
@@ -96,11 +124,18 @@ fun AppNavHost(
                                 contentDescription = "Nutrisi"
                             )
                         },
-                        label = { Text("Nutrisi") }
+                        label = { Text("Nutrisi", fontWeight = if (currentDestination?.hasRoute(Route.Nutrition::class) == true) FontWeight.Bold else FontWeight.Normal) }
                     )
                     NavigationBarItem(
                         selected = currentDestination?.hasRoute(Route.Profile::class) == true,
                         onClick  = { navigationActions.navigateToProfile() },
+                        colors   = NavigationBarItemDefaults.colors(
+                            selectedIconColor   = Color.White,
+                            selectedTextColor   = Color.White,
+                            unselectedIconColor = Color.White.copy(alpha = 0.55f),
+                            unselectedTextColor = Color.White.copy(alpha = 0.55f),
+                            indicatorColor      = maroonDark
+                        ),
                         icon = {
                             Icon(
                                 if (currentDestination?.hasRoute(Route.Profile::class) == true)
@@ -108,7 +143,7 @@ fun AppNavHost(
                                 contentDescription = "Profil"
                             )
                         },
-                        label = { Text("Profil") }
+                        label = { Text("Profil", fontWeight = if (currentDestination?.hasRoute(Route.Profile::class) == true) FontWeight.Bold else FontWeight.Normal) }
                     )
                 }
             }
