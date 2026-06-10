@@ -37,6 +37,20 @@ sealed interface Route {
     // AI Dynamic Workout
     @Serializable
     data object DynamicWorkout : Route
+
+    // Exercise Execution Flow
+    @Serializable
+    data class ExerciseDetail(
+        val name: String,
+        val bodyPart: String,
+        val gifUrl: String,
+        val instructions: String
+    ) : Route
+
+    @Serializable
+    data class ActiveSession(
+        val exerciseName: String
+    ) : Route
 }
 
 interface NavigationActions {
@@ -49,5 +63,7 @@ interface NavigationActions {
     fun navigateToNutrition()
     fun navigateToAddMeal()
     fun navigateToProfile()
+    fun navigateToExerciseDetail(name: String, bodyPart: String, gifUrl: String, instructions: String)
+    fun navigateToActiveSession(exerciseName: String)
     fun navigateBack()
 }

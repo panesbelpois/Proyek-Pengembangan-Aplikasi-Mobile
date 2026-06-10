@@ -104,6 +104,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.sqldelight.android.driver)
+            implementation("io.coil-kt.coil3:coil-gif:3.0.4")
         }
 
         iosMain.dependencies {
@@ -166,10 +167,12 @@ buildkonfig {
         val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "KUNCI_TIDAK_DITEMUKAN"
         val rapidKey = localProperties.getProperty("RAPID_API_KEY") ?: ""
         val groqKey = localProperties.getProperty("GROQ_API_KEY") ?: ""
+        val wgerKey = localProperties.getProperty("WGER_API_KEY") ?: ""
 
         // Gunakan FieldSpec.Type.STRING untuk mendefinisikan tipenya
         buildConfigField(FieldSpec.Type.STRING, "GEMINI_API_KEY", geminiKey)
         buildConfigField(FieldSpec.Type.STRING, "RAPID_API_KEY", rapidKey)
         buildConfigField(FieldSpec.Type.STRING, "GROQ_API_KEY", groqKey)
+        buildConfigField(FieldSpec.Type.STRING, "WGER_API_KEY", wgerKey)
     }
 }

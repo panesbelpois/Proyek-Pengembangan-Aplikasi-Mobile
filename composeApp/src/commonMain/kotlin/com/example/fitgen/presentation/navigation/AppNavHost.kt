@@ -34,6 +34,8 @@ import com.example.fitgen.presentation.screens.nutrition.NutritionScreen
 import com.example.fitgen.presentation.screens.profile.ProfileScreen
 import com.example.fitgen.presentation.screens.workout.AddWorkoutScreen
 import com.example.fitgen.presentation.screens.workout.WorkoutListScreen
+import com.example.fitgen.presentation.screens.workout.ActiveSessionScreen
+import com.example.fitgen.presentation.screens.workout.ExerciseDetailScreen
 
 private val topLevelRoutes = listOf(
     Route.Home::class,
@@ -121,7 +123,10 @@ fun AppNavHost(
                 HomeDashboardScreen(
                     onNavigateToWorkout        = { navigationActions.navigateToWorkoutList() },
                     onNavigateToNutrition      = { navigationActions.navigateToNutrition() },
-                    onNavigateToDynamicWorkout = { navigationActions.navigateToDynamicWorkout() }
+                    onNavigateToDynamicWorkout = { navigationActions.navigateToDynamicWorkout() },
+                    onNavigateToExerciseDetail = { name, bodyPart, gifUrl, instructions ->
+                        navigationActions.navigateToExerciseDetail(name, bodyPart, gifUrl, instructions)
+                    }
                 )
             }
             composable<Route.AIAssistant> { backStackEntry ->
@@ -137,7 +142,10 @@ fun AppNavHost(
                 HomeDashboardScreen(
                     onNavigateToWorkout        = { navigationActions.navigateToWorkoutList() },
                     onNavigateToNutrition      = { navigationActions.navigateToNutrition() },
-                    onNavigateToDynamicWorkout = { navigationActions.navigateToDynamicWorkout() }
+                    onNavigateToDynamicWorkout = { navigationActions.navigateToDynamicWorkout() },
+                    onNavigateToExerciseDetail = { name, bodyPart, gifUrl, instructions ->
+                        navigationActions.navigateToExerciseDetail(name, bodyPart, gifUrl, instructions)
+                    }
                 )
             }
             composable<Route.WorkoutList> {
@@ -162,6 +170,24 @@ fun AppNavHost(
             }
             composable<Route.DynamicWorkout> {
                 DynamicWorkoutScreen(
+                    onNavigateBack = { navigationActions.navigateBack() }
+                )
+            }
+            composable<Route.ExerciseDetail> { backStackEntry ->
+                val route: Route.ExerciseDetail = backStackEntry.toRoute()
+                ExerciseDetailScreen(
+                    name = route.name,
+                    bodyPart = route.bodyPart,
+                    gifUrl = route.gifUrl,
+                    instructions = route.instructions,
+                    onNavigateBack = { navigationActions.navigateBack() },
+                    onStartSession = { navigationActions.navigateToActiveSession(route.name) }
+                )
+            }
+            composable<Route.ActiveSession> { backStackEntry ->
+                val route: Route.ActiveSession = backStackEntry.toRoute()
+                ActiveSessionScreen(
+                    exerciseName = route.exerciseName,
                     onNavigateBack = { navigationActions.navigateBack() }
                 )
             }
@@ -190,6 +216,12 @@ private fun createNavigationActions(navController: NavHostController): Navigatio
         override fun navigateToAddMeal() = navController.navigate(Route.AddMeal)
         override fun navigateToProfile() {
             navController.navigate(Route.Profile) { popUpTo(Route.Profile) { inclusive = true } }
+        }
+        override fun navigateToExerciseDetail(name: String, bodyPart: String, gifUrl: String, instructions: String) {
+            navController.navigate(Route.ExerciseDetail(name, bodyPart, gifUrl, instructions))
+        }
+        override fun navigateToActiveSession(exerciseName: String) {
+            navController.navigate(Route.ActiveSession(exerciseName))
         }
         override fun navigateBack() = navController.popBackStack().let {}
     }
