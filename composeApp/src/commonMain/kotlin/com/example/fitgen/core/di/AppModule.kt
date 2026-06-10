@@ -28,6 +28,7 @@ import com.example.fitgen.domain.usecase.LogMealUseCase
 import com.example.fitgen.domain.usecase.LogWorkoutUseCase
 import com.example.fitgen.domain.usecase.UpdateLoginStreakUseCase
 import com.example.fitgen.domain.usecase.AddWaterGlassUseCase
+import com.example.fitgen.domain.usecase.RemoveWaterGlassUseCase
 import com.example.fitgen.domain.usecase.AnalyzeFoodNutritionUseCase
 import com.example.fitgen.presentation.screens.home.HomeDashboardViewModel
 import com.example.fitgen.presentation.screens.home.HomeViewModel
@@ -100,6 +101,7 @@ val useCaseModule = module {
     factory { UpdateLoginStreakUseCase(get()) }
     factory { GetLoginStreakUseCase(get()) }
     factory { AddWaterGlassUseCase(get()) }
+    factory { RemoveWaterGlassUseCase(get()) }
     factory { GetDailyWaterGlassesUseCase(get()) }
 }
 

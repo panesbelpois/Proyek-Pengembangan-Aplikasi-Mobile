@@ -13,14 +13,31 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FabPosition
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -61,90 +78,115 @@ fun AppNavHost(
         currentDestination?.hasRoute(routeClass) == true
     }
 
+    val maroon      = Color(0xFF800000)
+    val maroonDark  = Color(0xFF5A0000)
+
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                val maroon      = Color(0xFF800000)
-                val maroonDark  = Color(0xFF5A0000)
-                NavigationBar(
-                    containerColor = maroon
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(72.dp)
+                        .drawBehind {
+                            val path = Path().apply {
+                                val width = size.width
+                                val height = size.height
+                                val center = width / 2f
+                                val bumpRadius = 36.dp.toPx() // Cutout radius (slightly larger than FAB)
+                                val curveOffset = 24.dp.toPx() 
+                                
+                                moveTo(0f, 0f)
+                                lineTo(center - bumpRadius - curveOffset, 0f)
+                                
+                                // Dip DOWN into the bar to create a cutout hole
+                                cubicTo(
+                                    center - bumpRadius, 0f, 
+                                    center - bumpRadius, bumpRadius, // Control point moves DOWN
+                                    center, bumpRadius // End point is at the bottom of the cutout
+                                )
+                                cubicTo(
+                                    center + bumpRadius, bumpRadius, // Starts from bottom
+                                    center + bumpRadius, 0f, // Control point moves UP
+                                    center + bumpRadius + curveOffset, 0f 
+                                )
+                                
+                                lineTo(width, 0f)
+                                lineTo(width, height)
+                                lineTo(0f, height)
+                                close()
+                            }
+                            
+                            // Light top shadow/border
+                            drawPath(
+                                path = path,
+                                color = Color.Black.copy(alpha = 0.05f),
+                                style = androidx.compose.ui.graphics.drawscope.Stroke(width = 4.dp.toPx())
+                            )
+                            // White background
+                            drawPath(
+                                path = path,
+                                color = Color.White
+                            )
+                        }
                 ) {
-                    NavigationBarItem(
-                        selected = currentDestination?.hasRoute(Route.Home::class) == true,
-                        onClick  = { navigationActions.navigateToHome() },
-                        colors   = NavigationBarItemDefaults.colors(
-                            selectedIconColor   = Color.White,
-                            selectedTextColor   = Color.White,
-                            unselectedIconColor = Color.White.copy(alpha = 0.55f),
-                            unselectedTextColor = Color.White.copy(alpha = 0.55f),
-                            indicatorColor      = maroonDark
-                        ),
-                        icon = {
-                            Icon(
-                                if (currentDestination?.hasRoute(Route.Home::class) == true)
-                                    Icons.Filled.Home else Icons.Outlined.Home,
-                                contentDescription = "Beranda"
-                            )
-                        },
-                        label = { Text("Beranda", fontWeight = if (currentDestination?.hasRoute(Route.Home::class) == true) FontWeight.Bold else FontWeight.Normal) }
-                    )
-                    NavigationBarItem(
-                        selected = currentDestination?.hasRoute(Route.WorkoutList::class) == true,
-                        onClick  = { navigationActions.navigateToWorkoutList() },
-                        colors   = NavigationBarItemDefaults.colors(
-                            selectedIconColor   = Color.White,
-                            selectedTextColor   = Color.White,
-                            unselectedIconColor = Color.White.copy(alpha = 0.55f),
-                            unselectedTextColor = Color.White.copy(alpha = 0.55f),
-                            indicatorColor      = maroonDark
-                        ),
-                        icon = {
-                            Icon(
-                                if (currentDestination?.hasRoute(Route.WorkoutList::class) == true)
-                                    Icons.Filled.FitnessCenter else Icons.Outlined.FitnessCenter,
-                                contentDescription = "Latihan"
-                            )
-                        },
-                        label = { Text("Latihan", fontWeight = if (currentDestination?.hasRoute(Route.WorkoutList::class) == true) FontWeight.Bold else FontWeight.Normal) }
-                    )
-                    NavigationBarItem(
-                        selected = currentDestination?.hasRoute(Route.Nutrition::class) == true,
-                        onClick  = { navigationActions.navigateToNutrition() },
-                        colors   = NavigationBarItemDefaults.colors(
-                            selectedIconColor   = Color.White,
-                            selectedTextColor   = Color.White,
-                            unselectedIconColor = Color.White.copy(alpha = 0.55f),
-                            unselectedTextColor = Color.White.copy(alpha = 0.55f),
-                            indicatorColor      = maroonDark
-                        ),
-                        icon = {
-                            Icon(
-                                if (currentDestination?.hasRoute(Route.Nutrition::class) == true)
-                                    Icons.Filled.RestaurantMenu else Icons.Outlined.RestaurantMenu,
-                                contentDescription = "Nutrisi"
-                            )
-                        },
-                        label = { Text("Nutrisi", fontWeight = if (currentDestination?.hasRoute(Route.Nutrition::class) == true) FontWeight.Bold else FontWeight.Normal) }
-                    )
-                    NavigationBarItem(
-                        selected = currentDestination?.hasRoute(Route.Profile::class) == true,
-                        onClick  = { navigationActions.navigateToProfile() },
-                        colors   = NavigationBarItemDefaults.colors(
-                            selectedIconColor   = Color.White,
-                            selectedTextColor   = Color.White,
-                            unselectedIconColor = Color.White.copy(alpha = 0.55f),
-                            unselectedTextColor = Color.White.copy(alpha = 0.55f),
-                            indicatorColor      = maroonDark
-                        ),
-                        icon = {
-                            Icon(
-                                if (currentDestination?.hasRoute(Route.Profile::class) == true)
-                                    Icons.Filled.Person else Icons.Outlined.Person,
-                                contentDescription = "Profil"
-                            )
-                        },
-                        label = { Text("Profil", fontWeight = if (currentDestination?.hasRoute(Route.Profile::class) == true) FontWeight.Bold else FontWeight.Normal) }
-                    )
+                    // Navigation Items Row
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        NavItem(
+                            icon = if (currentDestination?.hasRoute(Route.Home::class) == true) Icons.Filled.Home else Icons.Outlined.Home,
+                            label = "Beranda",
+                            selected = currentDestination?.hasRoute(Route.Home::class) == true,
+                            onClick = { navigationActions.navigateToHome() },
+                            modifier = Modifier.weight(1f)
+                        )
+                        NavItem(
+                            icon = if (currentDestination?.hasRoute(Route.WorkoutList::class) == true) Icons.Filled.FitnessCenter else Icons.Outlined.FitnessCenter,
+                            label = "Latihan",
+                            selected = currentDestination?.hasRoute(Route.WorkoutList::class) == true,
+                            onClick = { navigationActions.navigateToWorkoutList() },
+                            modifier = Modifier.weight(1f)
+                        )
+                        
+                        // Spacer for Center FAB Cutout
+                        Spacer(modifier = Modifier.weight(1f))
+                        
+                        NavItem(
+                            icon = if (currentDestination?.hasRoute(Route.Nutrition::class) == true) Icons.Filled.RestaurantMenu else Icons.Outlined.RestaurantMenu,
+                            label = "Nutrisi",
+                            selected = currentDestination?.hasRoute(Route.Nutrition::class) == true,
+                            onClick = { navigationActions.navigateToNutrition() },
+                            modifier = Modifier.weight(1f)
+                        )
+                        NavItem(
+                            icon = if (currentDestination?.hasRoute(Route.Profile::class) == true) Icons.Filled.Person else Icons.Outlined.Person,
+                            label = "Profil",
+                            selected = currentDestination?.hasRoute(Route.Profile::class) == true,
+                            onClick = { navigationActions.navigateToProfile() },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    // Floating Camera Button (Ditempatkan di tengah lekukan)
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .offset(y = (-28).dp) // Offset by half its size so its center is exactly on the top edge
+                            .size(56.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF800000))
+                            .clickable { navigationActions.navigateToAddMeal() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CameraAlt,
+                            contentDescription = "Tambah Makanan via Kamera",
+                            tint = Color.White,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
                 }
             }
         }
@@ -185,7 +227,7 @@ fun AppNavHost(
             }
             composable<Route.WorkoutList> {
                 WorkoutListScreen(
-                    onNavigateToAddWorkout = { navigationActions.navigateToAddWorkout() },
+                    onNavigateToAddWorkout = { navigationActions.navigateToDynamicWorkout() },
                     onNavigateToDetail     = { }
                 )
             }
@@ -259,5 +301,25 @@ private fun createNavigationActions(navController: NavHostController): Navigatio
             navController.navigate(Route.ActiveSession(exerciseName))
         }
         override fun navigateBack() = navController.popBackStack().let {}
+    }
+}
+
+@Composable
+private fun NavItem(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val color = if (selected) Color(0xFF800000) else Color.Gray
+    Column(
+        modifier = modifier.clickable(onClick = onClick).padding(vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(imageVector = icon, contentDescription = label, tint = color, modifier = Modifier.size(26.dp))
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = label, color = color, fontSize = 12.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium)
     }
 }
