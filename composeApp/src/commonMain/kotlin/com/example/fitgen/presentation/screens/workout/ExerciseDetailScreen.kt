@@ -37,6 +37,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -163,8 +164,20 @@ fun ExerciseDetailScreen(
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 if (gifUrl.isNotBlank()) {
+                    val imageUrls = gifUrl.split(",")
+                    var currentImageIndex by remember { mutableStateOf(0) }
+                    
+                    if (imageUrls.size > 1) {
+                        LaunchedEffect(Unit) {
+                            while (true) {
+                                kotlinx.coroutines.delay(600)
+                                currentImageIndex = (currentImageIndex + 1) % imageUrls.size
+                            }
+                        }
+                    }
+
                     SubcomposeAsyncImage(
-                        model = gifUrl,
+                        model = imageUrls[currentImageIndex],
                         contentDescription = name,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize(),

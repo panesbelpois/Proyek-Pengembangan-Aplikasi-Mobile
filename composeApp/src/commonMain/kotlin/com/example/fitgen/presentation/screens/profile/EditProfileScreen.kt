@@ -74,7 +74,7 @@ fun EditProfileScreen(
     LaunchedEffect(uiState.saveSuccess) {
         if (uiState.saveSuccess) {
             snackbarHostState.showSnackbar("Profil berhasil disimpan!")
-            viewModel.resetSuccessState()
+            viewModel.resetSaveSuccess()
             onNavigateBack() // Kembali otomatis setelah berhasil simpan
         }
     }
@@ -163,6 +163,21 @@ fun EditProfileScreen(
                     onValueChange = viewModel::onNameChange,
                     label = "Nama Lengkap"
                 )
+
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    FitGenTextField(
+                        value = uiState.age,
+                        onValueChange = viewModel::onAgeChange,
+                        label = "Usia (Tahun)",
+                        modifier = Modifier.weight(1f)
+                    )
+                    FitGenTextField(
+                        value = uiState.gender,
+                        onValueChange = viewModel::onGenderChange,
+                        label = "Jenis Kelamin",
+                        modifier = Modifier.weight(1f)
+                    )
+                }
                 
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     FitGenTextField(

@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 data class HomeDashboardUiState(
     val isLoading: Boolean              = true,
     val userName: String                = "",
+    val profileImageBytes: ByteArray?   = null,
     val totalCaloriesToday: Int         = 0,
     val calorieTarget: Int              = 2000,
     val activeStreakDays: Int           = 0,
@@ -95,38 +96,54 @@ class HomeDashboardViewModel(
         .launchIn(viewModelScope)
     }
 
+    @OptIn(kotlin.io.encoding.ExperimentalEncodingApi::class)
     private fun loadUserName() {
         viewModelScope.launch {
             userPreferences.userProfile.collect { profile ->
                 _uiState.update { it.copy(userName = profile.name) }
             }
         }
+        viewModelScope.launch {
+            userPreferences.userProfileImageBase64.collect { base64 ->
+                if (base64 != null) {
+                    try {
+                        val bytes = kotlin.io.encoding.Base64.decode(base64)
+                        _uiState.update { it.copy(profileImageBytes = bytes) }
+                    } catch (e: Exception) {
+                        _uiState.update { it.copy(profileImageBytes = null) }
+                    }
+                } else {
+                    _uiState.update { it.copy(profileImageBytes = null) }
+                }
+            }
+        }
     }
 
     private fun loadChallenges() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isChallengesLoading = true) }
-            when (val result = exerciseApiService.getPopularChallenges()) {
-                is NetworkResult.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            challenges = result.data,
-                            isChallengesLoading = false
-                        )
-                    }
-                }
-                is NetworkResult.Error -> {
-                    _uiState.update {
-                        it.copy(
-                            isChallengesLoading = false,
-                            challenges = emptyList()
-                        )
-                    }
-                }
-                is NetworkResult.Loading -> {
-                    // State loading sudah di-set sebelum pemanggilan
-                }
-            }
+        _uiState.update { 
+            it.copy(
+                isChallengesLoading = false,
+                challenges = listOf(
+                    ExerciseDto(
+                        id = "fullbody",
+                        name = "30-Day Full Body Transformation",
+                        gifUrl = "challenge_full_body",
+                        bodyPart = "Full Body"
+                    ),
+                    ExerciseDto(
+                        id = "core",
+                        name = "14-Day Core Crusher",
+                        gifUrl = "challenge_core",
+                        bodyPart = "Core"
+                    ),
+                    ExerciseDto(
+                        id = "upperbody",
+                        name = "21-Day Upper Body Power",
+                        gifUrl = "challenge_upper_body",
+                        bodyPart = "Upper Body"
+                    )
+                )
+            ) 
         }
     }
 

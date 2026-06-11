@@ -41,6 +41,8 @@ import com.example.fitgen.presentation.screens.workout.AddWorkoutViewModel
 import com.example.fitgen.presentation.screens.workout.ExerciseDetailViewModel
 import com.example.fitgen.presentation.screens.workout.ActiveSessionViewModel
 import com.example.fitgen.presentation.screens.workout.WorkoutListViewModel
+import com.example.fitgen.presentation.screens.splash.SplashViewModel
+import com.example.fitgen.presentation.screens.onboarding.OnboardingViewModel
 import com.example.fitgen.presentation.screens.ai.AIAssistantViewModel
 import com.example.fitgen.presentation.screens.ai.DynamicWorkoutViewModel
 import io.ktor.client.HttpClient
@@ -113,7 +115,7 @@ val useCaseModule = module {
 // ==================== VIEWMODEL MODULE ====================
 val viewModelModule = module {
     viewModelOf(::AIAssistantViewModel)
-    factory { DynamicWorkoutViewModel(get(), get()) }
+    factory { DynamicWorkoutViewModel(get(), get(), get()) }
     viewModelOf(::HomeViewModel)
     viewModelOf(::HomeDashboardViewModel)
     viewModelOf(::WorkoutListViewModel)
@@ -123,6 +125,10 @@ val viewModelModule = module {
     viewModelOf(::NutritionViewModel)
     viewModelOf(::AddMealViewModel)
     viewModelOf(::ProfileViewModel)
+    viewModelOf(::SplashViewModel)
+    viewModelOf(::OnboardingViewModel)
+    factory { params -> com.example.fitgen.presentation.screens.challenge.ChallengeDetailViewModel(params.get(), get(), get()) }
+    factory { params -> com.example.fitgen.presentation.screens.challenge.ChallengeDayViewModel(params.get(0), params.get(1), get()) }
 }
 
 // ==================== SHARED MODULES ====================

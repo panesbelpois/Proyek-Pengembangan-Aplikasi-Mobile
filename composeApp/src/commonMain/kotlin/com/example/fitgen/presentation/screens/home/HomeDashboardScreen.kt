@@ -46,6 +46,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.remember
+import com.preat.peekaboo.image.picker.toImageBitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +60,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.clickable
+import noteai.composeapp.generated.resources.Res
+import noteai.composeapp.generated.resources.challenge_full_body
+import noteai.composeapp.generated.resources.challenge_core
+import noteai.composeapp.generated.resources.challenge_upper_body
+import org.jetbrains.compose.resources.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.fitgen.data.remote.dto.ExerciseDto
@@ -70,6 +79,7 @@ fun HomeDashboardScreen(
     onNavigateToNutrition      : () -> Unit      = {},
     onNavigateToDynamicWorkout : () -> Unit = {},
     onNavigateToExerciseDetail : (name: String, bodyPart: String, gifUrl: String, instructions: String) -> Unit = { _, _, _, _ -> },
+    onNavigateToChallengeDetail: (String) -> Unit = {},
     viewModel: HomeDashboardViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -95,8 +105,9 @@ fun HomeDashboardScreen(
             // ─── 1. Greeting Header ───────────────────────────────────────────
             item {
                 GreetingHeader(
-                    userName     = uiState.userName,
-                    activeStreak = uiState.activeStreakDays
+                    userName          = uiState.userName,
+                    profileImageBytes = uiState.profileImageBytes,
+                    activeStreak      = uiState.activeStreakDays
                 )
             }
 
@@ -137,27 +148,23 @@ fun HomeDashboardScreen(
                     }
                 } else {
                     val pagerState = androidx.compose.foundation.pager.rememberPagerState(
-                        pageCount = { uiState.challenges.size }
+                        pageCount = { Int.MAX_VALUE },
+                        initialPage = Int.MAX_VALUE / 2
                     )
                     androidx.compose.foundation.pager.HorizontalPager(
                         state = pagerState,
                         contentPadding = PaddingValues(horizontal = 20.dp),
                         pageSpacing = 14.dp,
-                        modifier = Modifier.fillMaxWidth().height(280.dp)
+                        modifier = Modifier.fillMaxWidth().height(220.dp)
                     ) { page ->
-                        val exercise = uiState.challenges[page]
+                        val actualPage = page % uiState.challenges.size
+                        val exercise = uiState.challenges[actualPage]
                         ChallengeCard(
                             exercise = exercise,
                             onStartClick = {
-                                val instructions = exercise.instructions?.joinToString("\n") ?: "Tidak ada instruksi tersedia."
-                                onNavigateToExerciseDetail(
-                                    exercise.name ?: "Unknown",
-                                    exercise.bodyPart ?: "General",
-                                    exercise.gifUrl ?: "",
-                                    instructions
-                                )
+                                onNavigateToChallengeDetail(exercise.id ?: "")
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().height(220.dp)
                         )
                     }
                 }
@@ -245,6 +252,7 @@ fun HomeDashboardScreen(
 @Composable
 private fun GreetingHeader(
     userName: String,
+    profileImageBytes: ByteArray?,
     activeStreak: Int
 ) {
     val displayName = if (userName.isBlank()) "there" else userName.split(" ").first()
@@ -266,20 +274,34 @@ private fun GreetingHeader(
             Box(
                 modifier = Modifier
                     .size(46.dp)
+                    .clip(CircleShape)
                     .background(
                         brush = Brush.linearGradient(
                             colors = listOf(Color(0xFF800000), Color(0xFFAF3A50))
-                        ),
-                        shape = CircleShape
+                        )
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text       = initial,
-                    style      = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.ExtraBold,
-                    color      = Color.White
-                )
+                if (profileImageBytes != null) {
+                    val imageBitmap = remember(profileImageBytes) {
+                        profileImageBytes.toImageBitmap()
+                    }
+                    if (imageBitmap != null) {
+                        Image(
+                            bitmap = imageBitmap,
+                            contentDescription = "Profile Photo",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                } else {
+                    Text(
+                        text       = initial,
+                        style      = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.ExtraBold,
+                        color      = Color.White
+                    )
+                }
             }
             Column {
                 Text(
@@ -337,143 +359,56 @@ private fun GreetingHeader(
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
-private fun ChallengeCard(
-    modifier: Modifier = Modifier,
+fun ChallengeCard(
     exercise: ExerciseDto,
-    onStartClick: () -> Unit
+    onStartClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val displayName = exercise.name
-        ?.split(" ")
-        ?.joinToString(" ") { it.replaceFirstChar { c -> c.uppercaseChar() } }
-        ?: "Challenge"
-
-    val bodyPartLabel = exercise.bodyPart
-        ?.replaceFirstChar { it.uppercaseChar() }
-        ?: ""
-
     Card(
-        modifier  = modifier,
-        shape     = RoundedCornerShape(18.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
-        colors    = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        modifier = modifier.clickable { onStartClick() },
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
-        Column {
-            // Gambar / GIF
+        Box(modifier = Modifier.fillMaxSize()) {
+            val resource = when (exercise.gifUrl) {
+                "challenge_full_body" -> Res.drawable.challenge_full_body
+                "challenge_core" -> Res.drawable.challenge_core
+                "challenge_upper_body" -> Res.drawable.challenge_upper_body
+                else -> null
+            }
+            if (resource != null) {
+                Image(
+                    painter = painterResource(resource),
+                    contentDescription = exercise.name,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Box(modifier = Modifier.fillMaxSize().background(Color.DarkGray))
+            }
+
+            // Gradient overlay at the bottom for text readability
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(130.dp)
-                    .clip(RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-            ) {
-                val coverImage = exercise.imageUrls.firstOrNull() ?: exercise.gifUrl
-                if (!coverImage.isNullOrBlank()) {
-                    coil3.compose.SubcomposeAsyncImage(
-                        model = coverImage,
-                        contentDescription = displayName,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize(),
-                        loading = {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
-                            }
-                        },
-                        error = {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Icon(
-                                        imageVector = Icons.Default.FitnessCenter,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
-                                        modifier = Modifier.size(32.dp)
-                                    )
-                                    Text("Gagal Muat", fontSize = 10.sp, color = MaterialTheme.colorScheme.error)
-                                }
-                            }
-                        }
-                    )
-                } else {
-                    // Placeholder premium saat gambar tidak ada dari API
-                    val fallbackBrush = Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.9f)
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.9f)),
+                            startY = 250f
                         )
                     )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(fallbackBrush),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.FitnessCenter,
-                            contentDescription = null,
-                            tint     = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f),
-                            modifier = Modifier.size(64.dp)
-                        )
-                    }
-                }
-                // Badge bodyPart di pojok kiri atas
-                if (bodyPartLabel.isNotBlank()) {
-                    Surface(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.TopStart),
-                        shape = RoundedCornerShape(6.dp),
-                        color = MaterialTheme.colorScheme.primaryContainer
-                    ) {
-                        Text(
-                            text     = bodyPartLabel,
-                            style    = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color    = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                        )
-                    }
-                }
-            }
+            )
 
-            // Konten teks + tombol
-            Column(
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 10.dp, bottom = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text     = displayName,
-                    style    = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color    = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    lineHeight = 18.sp
-                )
-                Button(
-                    onClick       = onStartClick,
-                    modifier      = Modifier
-                        .fillMaxWidth()
-                        .height(34.dp),
-                    shape         = RoundedCornerShape(10.dp),
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                    colors        = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = null,
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text  = "Mulai",
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
+            // Text at bottom left
+            Text(
+                text = exercise.name ?: "",
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(20.dp)
+            )
         }
     }
 }

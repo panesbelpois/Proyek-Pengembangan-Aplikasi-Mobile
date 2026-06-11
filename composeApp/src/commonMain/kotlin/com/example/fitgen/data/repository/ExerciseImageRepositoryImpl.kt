@@ -7,10 +7,8 @@ class ExerciseImageRepositoryImpl(
     private val apiService: ExerciseApiService
 ) : ExerciseImageRepository {
     override suspend fun getExerciseGifUrl(exerciseName: String): String? {
-        val cleanName = exerciseName.lowercase().trim()
-        
-        // Menggunakan hash dari nama sebagai seed agar gambar selalu konsisten untuk gerakan yang sama
-        val seed = cleanName.hashCode().let { if (it < 0) -it else it } % 1000
-        return "https://loremflickr.com/400/300/fitness,gym/all?lock=$seed"
+        val formatted = exerciseName.trim().split(" ").joinToString("_") { it.replaceFirstChar { c -> c.uppercase() } }
+        val baseUrl = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/$formatted"
+        return "$baseUrl/0.jpg,$baseUrl/1.jpg"
     }
 }

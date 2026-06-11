@@ -48,7 +48,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -70,6 +74,8 @@ fun DynamicWorkoutScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    var showSaveDialog by remember { mutableStateOf(false) }
+    var saveRoutineName by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -478,12 +484,65 @@ fun DynamicWorkoutScreen(
                                     }
                                 }
                             }
+                            
+                            // Save Button
+                            Button(
+                                onClick = { showSaveDialog = true },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 20.dp, vertical = 20.dp)
+                                    .height(56.dp),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF800000),
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)
+                                Spacer(Modifier.width(8.dp))
+                                Text("Simpan ke Latihan Custom", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.White)
+                            }
                         }
                     }
                 }
 
                 Spacer(Modifier.height(32.dp))
             }
+        }
+
+        // Save Dialog
+        if (showSaveDialog) {
+            AlertDialog(
+                onDismissRequest = { showSaveDialog = false },
+                title = { Text("Simpan ke Latihan Custom") },
+                text = {
+                    OutlinedTextField(
+                        value = saveRoutineName,
+                        onValueChange = { saveRoutineName = it },
+                        label = { Text("Nama Rutinitas (cth: Latihan AI Pagi)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            if (saveRoutineName.isNotBlank()) {
+                                viewModel.saveToCustomRoutine(saveRoutineName)
+                                saveRoutineName = ""
+                                showSaveDialog = false
+                            }
+                        }
+                    ) {
+                        Text("Simpan")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showSaveDialog = false }) {
+                        Text("Batal")
+                    }
+                }
+            )
         }
     }
 }

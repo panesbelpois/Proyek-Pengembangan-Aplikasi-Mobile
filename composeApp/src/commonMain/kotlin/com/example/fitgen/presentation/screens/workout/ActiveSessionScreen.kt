@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
@@ -32,6 +33,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -56,17 +58,29 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ActiveSessionScreen(
     exerciseName: String,
+    challengeId: String? = null,
+    challengeDay: Int? = null,
     viewModel: ActiveSessionViewModel,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onSessionFinished: () -> Unit = onNavigateBack
 ) {
     val remainingSeconds by viewModel.remainingSeconds.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
     val isFinished by viewModel.isFinished.collectAsState()
 
-    // Jika sudah selesai disimpan, otomatis kembali
+    val exercisesList by viewModel.exercisesList.collectAsState()
+    val currentIndex by viewModel.currentIndex.collectAsState()
+    val currentExerciseName by viewModel.currentExerciseName.collectAsState()
+    val isLastExercise by viewModel.isLastExercise.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(exerciseName, challengeId, challengeDay)
+    }
+
+    // Jika sudah selesai disimpan, otomatis kembali (diatur di AppNavHost)
     LaunchedEffect(isFinished) {
         if (isFinished) {
-            onNavigateBack()
+            onSessionFinished()
         }
     }
 
@@ -130,12 +144,27 @@ fun ActiveSessionScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = exerciseName.uppercase(),
+                    text = currentExerciseName.uppercase(),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.ExtraBold,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
+                if (exercisesList.size > 1) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.secondaryContainer
+                    ) {
+                        Text(
+                            text = "Latihan ${currentIndex + 1} dari ${exercisesList.size}",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
+                }
             }
 
             // Center Section: Glowing Timer
@@ -210,14 +239,26 @@ fun ActiveSessionScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Berhenti Button
-                FilledTonalButton(
-                    onClick = { viewModel.finishSession(exerciseName) },
-                    modifier = Modifier.height(56.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Stop, contentDescription = "Berhenti", tint = MaterialTheme.colorScheme.error)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Selesai & Simpan", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                if (isLastExercise) {
+                    // Selesai Button
+                    FilledTonalButton(
+                        onClick = { viewModel.finishSession(challengeId, challengeDay) },
+                        modifier = Modifier.height(56.dp)
+                    ) {
+                        Icon(imageVector = Icons.Default.Stop, contentDescription = "Selesai", tint = MaterialTheme.colorScheme.error)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Selesai & Simpan", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                    }
+                } else {
+                    // Selanjutnya / Skip Button
+                    FilledTonalButton(
+                        onClick = { viewModel.skipToNext() },
+                        modifier = Modifier.height(56.dp)
+                    ) {
+                        Text("Selanjutnya", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Lanjut", tint = MaterialTheme.colorScheme.primary)
+                    }
                 }
 
                 Spacer(modifier = Modifier.width(24.dp))

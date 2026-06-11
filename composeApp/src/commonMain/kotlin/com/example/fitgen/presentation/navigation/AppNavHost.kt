@@ -197,9 +197,26 @@ fun AppNavHost(
     ) { innerPadding ->
         NavHost(
             navController    = navController,
-            startDestination = Route.Home,
+            startDestination = Route.Splash,
             modifier         = modifier.padding(innerPadding)
         ) {
+            composable<Route.Splash> {
+                com.example.fitgen.presentation.screens.splash.SplashScreen(
+                    onNavigateToHome = {
+                        navigationActions.navigateToHome()
+                    },
+                    onNavigateToOnboarding = {
+                        navigationActions.navigateToOnboarding()
+                    }
+                )
+            }
+            composable<Route.Onboarding> {
+                com.example.fitgen.presentation.screens.onboarding.OnboardingScreen(
+                    onOnboardingComplete = {
+                        navigationActions.navigateToHome()
+                    }
+                )
+            }
             composable<Route.Home> {
                 HomeDashboardScreen(
                     onNavigateToWorkout        = { navigationActions.navigateToWorkoutList() },
@@ -207,7 +224,8 @@ fun AppNavHost(
                     onNavigateToDynamicWorkout = { navigationActions.navigateToDynamicWorkout() },
                     onNavigateToExerciseDetail = { name, bodyPart, gifUrl, instructions ->
                         navigationActions.navigateToExerciseDetail(name, bodyPart, gifUrl, instructions)
-                    }
+                    },
+                    onNavigateToChallengeDetail = { id -> navigationActions.navigateToChallengeDetail(id) }
                 )
             }
             composable<Route.AIAssistant> { backStackEntry ->
@@ -226,7 +244,8 @@ fun AppNavHost(
                     onNavigateToDynamicWorkout = { navigationActions.navigateToDynamicWorkout() },
                     onNavigateToExerciseDetail = { name, bodyPart, gifUrl, instructions ->
                         navigationActions.navigateToExerciseDetail(name, bodyPart, gifUrl, instructions)
-                    }
+                    },
+                    onNavigateToChallengeDetail = { id -> navigationActions.navigateToChallengeDetail(id) }
                 )
             }
             composable<Route.WorkoutList> {
@@ -250,7 +269,8 @@ fun AppNavHost(
             composable<Route.Profile> {
                 ProfileScreen(
                     onNavigateBack = { navigationActions.navigateBack() },
-                    onNavigateToEditProfile = { navigationActions.navigateToEditProfile() }
+                    onNavigateToEditProfile = { navigationActions.navigateToEditProfile() },
+                    onLogoutSuccess = { navigationActions.navigateToOnboarding() }
                 )
             }
             composable<Route.EditProfile> {
@@ -279,8 +299,39 @@ fun AppNavHost(
                 val viewModel = koinViewModel<ActiveSessionViewModel>()
                 ActiveSessionScreen(
                     exerciseName = route.exerciseName,
+                    challengeId = route.challengeId,
+                    challengeDay = route.challengeDay,
                     viewModel = viewModel,
-                    onNavigateBack = { navigationActions.navigateBack() }
+                    onNavigateBack = { navigationActions.navigateBack() },
+                    onSessionFinished = {
+                        if (route.challengeId != null) {
+                            navController.popBackStack<Route.ChallengeDetail>(inclusive = false)
+                        } else {
+                            navigationActions.navigateBack()
+                        }
+                    }
+                )
+            }
+            composable<Route.ChallengeDetail> { backStackEntry ->
+                val route: Route.ChallengeDetail = backStackEntry.toRoute()
+                com.example.fitgen.presentation.screens.challenge.ChallengeDetailScreen(
+                    challengeId = route.challengeId,
+                    onNavigateBack = { navigationActions.navigateBack() },
+                    onNavigateToDay = { id, day -> navigationActions.navigateToChallengeDay(id, day) }
+                )
+            }
+            composable<Route.ChallengeDay> { backStackEntry ->
+                val route: Route.ChallengeDay = backStackEntry.toRoute()
+                com.example.fitgen.presentation.screens.challenge.ChallengeDayScreen(
+                    challengeId = route.challengeId,
+                    day = route.day,
+                    onNavigateBack = { navigationActions.navigateBack() },
+                    onStartSession = { id, day -> 
+                        // Start session by passing a generic dummy or using first exercise name
+                        // Since ActiveSession needs an exerciseName to start, we can pass a special marker like "CHALLENGE" 
+                        // and handle it inside ActiveSessionScreen, or just "Challenge Day"
+                        navigationActions.navigateToActiveSession("Challenge Day $day", id, day) 
+                    }
                 )
             }
         }
@@ -289,8 +340,17 @@ fun AppNavHost(
 
 private fun createNavigationActions(navController: NavHostController): NavigationActions {
     return object : NavigationActions {
+        override fun navigateToSplash() {
+            navController.navigate(Route.Splash) { popUpTo(Route.Splash) { inclusive = true } }
+        }
+        override fun navigateToOnboarding() {
+            navController.navigate(Route.Onboarding) { popUpTo(0) }
+        }
         override fun navigateToHome() {
-            navController.navigate(Route.Home) { popUpTo(Route.Home) { inclusive = true } }
+            navController.navigate(Route.Home) { 
+                popUpTo(Route.Splash) { inclusive = true } 
+                popUpTo(Route.Onboarding) { inclusive = true }
+            }
         }
         override fun navigateToDashboard() {
             navController.navigate(Route.Dashboard) { popUpTo(Route.Dashboard) { inclusive = true } }
@@ -315,8 +375,14 @@ private fun createNavigationActions(navController: NavHostController): Navigatio
         override fun navigateToExerciseDetail(name: String, bodyPart: String, gifUrl: String, instructions: String) {
             navController.navigate(Route.ExerciseDetail(name, bodyPart, gifUrl, instructions))
         }
-        override fun navigateToActiveSession(exerciseName: String) {
-            navController.navigate(Route.ActiveSession(exerciseName))
+        override fun navigateToActiveSession(exerciseName: String, challengeId: String?, challengeDay: Int?) {
+            navController.navigate(Route.ActiveSession(exerciseName, challengeId, challengeDay))
+        }
+        override fun navigateToChallengeDetail(challengeId: String) {
+            navController.navigate(Route.ChallengeDetail(challengeId))
+        }
+        override fun navigateToChallengeDay(challengeId: String, day: Int) {
+            navController.navigate(Route.ChallengeDay(challengeId, day))
         }
         override fun navigateBack() = navController.popBackStack().let {}
     }

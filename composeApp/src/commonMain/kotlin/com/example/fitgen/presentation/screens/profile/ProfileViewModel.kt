@@ -15,15 +15,15 @@ import kotlinx.coroutines.launch
 data class ProfileUiState(
     val name: String = "",
     val age: String = "",
+    val gender: String = "",
     val height: String = "",
     val weight: String = "",
     val goal: String = "",
     val profileImageBytes: ByteArray? = null,
     val weightHistory: List<Double> = emptyList(),
-    val totalCalories: Int = 0,
-    val activeMinutes: Int = 0,
     val nameError: String? = null,
     val ageError: String? = null,
+    val genderError: String? = null,
     val heightError: String? = null,
     val weightError: String? = null,
     val isSaving: Boolean = false,
@@ -82,11 +82,10 @@ class ProfileViewModel(
                 it.copy(
                     name = profile.name,
                     age = if (profile.age > 0) profile.age.toString() else "",
+                    gender = profile.gender,
                     height = if (profile.heightCm > 0.0) profile.heightCm.toString() else "",
                     weight = if (currentWeight > 0.0) currentWeight.toString() else "",
                     weightHistory = initialHistory,
-                    totalCalories = 1250,
-                    activeMinutes = 45,
                     goal = profile.goal,
                     isLoading = false
                 )
@@ -101,6 +100,10 @@ class ProfileViewModel(
     fun onAgeChange(value: String) {
         val error = validateInt(value, "Umur")
         _uiState.update { it.copy(age = value, ageError = error) }
+    }
+
+    fun onGenderChange(value: String) {
+        _uiState.update { it.copy(gender = value, genderError = if (value.isBlank()) "Jenis kelamin harus dipilih" else null) }
     }
 
     fun onHeightChange(value: String) {
@@ -131,13 +134,15 @@ class ProfileViewModel(
         val state = _uiState.value
 
         val nameErr = if (state.name.isBlank()) "Nama tidak boleh kosong" else null
+        val genderErr = if (state.gender.isBlank()) "Jenis kelamin harus dipilih" else null
         val heightErr = validateDouble(state.height, "Tinggi badan")
         val weightErr = validateDouble(state.weight, "Berat badan")
 
-        if (nameErr != null || heightErr != null || weightErr != null) {
+        if (nameErr != null || genderErr != null || heightErr != null || weightErr != null) {
             _uiState.update {
                 it.copy(
                     nameError = nameErr,
+                    genderError = genderErr,
                     heightError = heightErr,
                     weightError = weightErr
                 )
@@ -148,16 +153,18 @@ class ProfileViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
 
-            val newWeight = state.weight.trim().toDoubleOrNull() ?: 0.0
-            val profile = UserProfile(
+            val w = state.weight.trim().toDoubleOrNull() ?: 0.0
+            val h = state.height.trim().toDoubleOrNull() ?: 0.0
+            val profileToSave = UserProfile(
                 name = state.name.trim(),
                 age = state.age.trim().toIntOrNull() ?: 0,
-                heightCm = state.height.trim().toDoubleOrNull() ?: 0.0,
-                weightKg = newWeight,
+                gender = state.gender,
+                heightCm = h,
+                weightKg = w,
                 goal = state.goal
             )
 
-            userPreferences.saveUserProfile(profile)
+            userPreferences.saveUserProfile(profileToSave)
 
             if (state.profileImageBytes != null) {
                 try {
@@ -170,7 +177,7 @@ class ProfileViewModel(
             }
 
             val updatedHistory = state.weightHistory.toMutableList().apply {
-                if (newWeight > 0.0) add(newWeight)
+                if (w > 0.0) add(w)
             }
 
             delay(500)
@@ -185,8 +192,15 @@ class ProfileViewModel(
         }
     }
 
-    fun resetSuccessState() {
+    fun resetSaveSuccess() {
         _uiState.update { it.copy(saveSuccess = false) }
+    }
+
+    fun logout(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            userPreferences.logout()
+            onSuccess()
+        }
     }
 
     private fun validateInt(value: String, fieldName: String): String? {

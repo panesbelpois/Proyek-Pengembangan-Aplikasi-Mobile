@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 class GeminiService(private val client: HttpClient) {
 
     private val apiKey = BuildKonfig.GEMINI_API_KEY
-    private val baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent"
+    private val baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
     suspend fun analyzeImage(prompt: String, imageBytes: ByteArray): String {
         try {
