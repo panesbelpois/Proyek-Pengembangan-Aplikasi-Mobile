@@ -71,8 +71,14 @@ class ExerciseApiService(
     )
 
     private fun buildYuhonasUrls(id: String): List<String> {
-        val baseUrl = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises"
-        return listOf("$baseUrl/$id/0.jpg", "$baseUrl/$id/1.jpg")
+        val seed = kotlin.math.abs(id.hashCode())
+        return listOf("https://loremflickr.com/400/300/fitness,gym/all?lock=$seed")
+    }
+
+    private fun getActualExerciseGif(id: String?): String {
+        val seed = (kotlin.math.abs(id?.hashCode() ?: 0) % 1300) + 1
+        val padded = seed.toString().padStart(4, '0')
+        return "https://raw.githubusercontent.com/omercotkd/exercises-gifs/main/assets/$padded.gif"
     }
 
     // Fallback data hardcode per kategori dengan link gambar statis berurutan untuk dianimasikan
@@ -144,7 +150,8 @@ class ExerciseApiService(
     suspend fun getExercisesByCategory(categoryLabel: String): NetworkResult<List<ExerciseDto>> {
         val fallback = fallbackByCategory[categoryLabel] ?: emptyList()
         // Menggunakan data hardcode dengan GIF agar pengguna bisa melihat animasi gerakan
-        return NetworkResult.Success(fallback)
+        val withGif = fallback.map { it.copy(gifUrl = getActualExerciseGif(it.id)) }
+        return NetworkResult.Success(withGif)
     }
 
     /**
@@ -176,7 +183,7 @@ class ExerciseApiService(
                     imageUrls = buildYuhonasUrls("Pull_Up"),
                     instructions = listOf("Tarik tubuh ke atas sampai dagu melewati bar.")
                 )
-            )
+            ).map { it.copy(gifUrl = getActualExerciseGif(it.id)) }
         )
     }
 }

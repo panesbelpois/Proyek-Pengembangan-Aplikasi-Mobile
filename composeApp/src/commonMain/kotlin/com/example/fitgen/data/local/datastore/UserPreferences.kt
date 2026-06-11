@@ -40,6 +40,7 @@ class UserPreferences(
         val USER_HEIGHT = doublePreferencesKey("user_height")
         val USER_WEIGHT = doublePreferencesKey("user_weight")
         val USER_GOAL = stringPreferencesKey("user_goal")
+        val USER_PROFILE_IMAGE_BASE64 = stringPreferencesKey("user_profile_image_base64")
         
         // --- Sprint 4: Streak & Hydration ---
         val LAST_LOGIN_DATE = longPreferencesKey("last_login_date")
@@ -163,6 +164,20 @@ class UserPreferences(
             prefs[Keys.USER_HEIGHT] = profile.heightCm
             prefs[Keys.USER_WEIGHT] = profile.weightKg
             prefs[Keys.USER_GOAL] = profile.goal
+        }
+    }
+    
+    val userProfileImageBase64: Flow<String?> = dataStore.data.map { prefs ->
+        prefs[Keys.USER_PROFILE_IMAGE_BASE64]
+    }
+    
+    suspend fun saveUserProfileImageBase64(base64: String?) {
+        dataStore.edit { prefs ->
+            if (base64 == null) {
+                prefs.remove(Keys.USER_PROFILE_IMAGE_BASE64)
+            } else {
+                prefs[Keys.USER_PROFILE_IMAGE_BASE64] = base64
+            }
         }
     }
     

@@ -75,7 +75,7 @@ fun HomeDashboardScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        containerColor = Color(0xFFFFFFFF)
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         if (uiState.isLoading) {
             Box(
@@ -286,12 +286,12 @@ private fun GreetingHeader(
                     text  = "Halo, $displayName! 👋",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1C1C1C)
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text  = "Tetap semangat hari ini 💪",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF1C1C1C).copy(alpha = 0.55f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
                 )
             }
         }
@@ -323,13 +323,12 @@ private fun GreetingHeader(
         }
     }
 
-    // Divider bawah header
     Box(
         modifier = Modifier
             .padding(horizontal = 20.dp)
             .fillMaxWidth()
             .height(1.dp)
-            .background(Color(0xFF1C1C1C).copy(alpha = 0.07f))
+            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.07f))
     )
 }
 
@@ -874,7 +873,7 @@ private fun SectionTitle(text: String, modifier: Modifier = Modifier) {
             text       = text,
             style      = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color      = Color(0xFF1C1C1C)
+            color      = MaterialTheme.colorScheme.onSurface
         )
     }
 }

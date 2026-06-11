@@ -287,7 +287,7 @@ private fun WaterTrackerCard(
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 16.dp),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)), // Light Blue
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF0D47A1)), // Dark Blue
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
@@ -302,13 +302,13 @@ private fun WaterTrackerCard(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF2196F3).copy(alpha = 0.2f)),
+                        .background(Color.White.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.LocalDrink,
                         contentDescription = "Air",
-                        tint = Color(0xFF1976D2)
+                        tint = Color.White
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
@@ -317,12 +317,12 @@ private fun WaterTrackerCard(
                         text = "Air Putih",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF0D47A1)
+                        color = Color.White
                     )
                     Text(
                         text = "$waterGlasses / $dailyTarget Gelas",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFF1565C0)
+                        color = Color.White.copy(alpha = 0.8f)
                     )
                 }
             }
@@ -333,16 +333,16 @@ private fun WaterTrackerCard(
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(Color.White)
+                        .background(Color.White.copy(alpha = 0.2f))
                 ) {
-                    Icon(Icons.Default.Remove, contentDescription = "Kurangi", tint = Color(0xFF1976D2), modifier = Modifier.size(20.dp))
+                    Icon(Icons.Default.Remove, contentDescription = "Kurangi", tint = Color.White, modifier = Modifier.size(20.dp))
                 }
                 IconButton(
                     onClick = onAddWater,
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF2196F3))
+                        .background(Color(0xFF1976D2))
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Tambah", tint = Color.White, modifier = Modifier.size(20.dp))
                 }

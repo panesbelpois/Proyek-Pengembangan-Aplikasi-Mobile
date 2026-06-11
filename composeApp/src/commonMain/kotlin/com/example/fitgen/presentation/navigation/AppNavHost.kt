@@ -56,7 +56,9 @@ import com.example.fitgen.presentation.screens.profile.EditProfileScreen
 import com.example.fitgen.presentation.screens.workout.AddWorkoutScreen
 import com.example.fitgen.presentation.screens.workout.WorkoutListScreen
 import com.example.fitgen.presentation.screens.workout.ActiveSessionScreen
+import com.example.fitgen.presentation.screens.workout.ActiveSessionViewModel
 import com.example.fitgen.presentation.screens.workout.ExerciseDetailScreen
+import org.koin.compose.viewmodel.koinViewModel
 
 private val topLevelRoutes = listOf(
     Route.Home::class,
@@ -81,6 +83,7 @@ fun AppNavHost(
 
     val maroon      = Color(0xFF800000)
     val maroonDark  = Color(0xFF5A0000)
+    val surfaceColor = MaterialTheme.colorScheme.surface
 
     Scaffold(
         bottomBar = {
@@ -124,10 +127,10 @@ fun AppNavHost(
                                 color = Color.Black.copy(alpha = 0.05f),
                                 style = androidx.compose.ui.graphics.drawscope.Stroke(width = 4.dp.toPx())
                             )
-                            // White background
+                            // Background
                             drawPath(
                                 path = path,
-                                color = Color.White
+                                color = surfaceColor
                             )
                         }
                 ) {
@@ -273,8 +276,10 @@ fun AppNavHost(
             }
             composable<Route.ActiveSession> { backStackEntry ->
                 val route: Route.ActiveSession = backStackEntry.toRoute()
+                val viewModel = koinViewModel<ActiveSessionViewModel>()
                 ActiveSessionScreen(
                     exerciseName = route.exerciseName,
+                    viewModel = viewModel,
                     onNavigateBack = { navigationActions.navigateBack() }
                 )
             }
@@ -325,7 +330,7 @@ private fun NavItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val color = if (selected) Color(0xFF800000) else Color.Gray
+    val color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
     Column(
         modifier = modifier.clickable(onClick = onClick).padding(vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

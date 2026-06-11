@@ -28,7 +28,8 @@ data class ProfileUiState(
     val weightError: String? = null,
     val isSaving: Boolean = false,
     val saveSuccess: Boolean = false,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val isDarkMode: Boolean = false
 )
 
 class ProfileViewModel(
@@ -48,6 +49,24 @@ class ProfileViewModel(
 
     init {
         loadProfile()
+        viewModelScope.launch {
+            userPreferences.isDarkMode.collect { mode ->
+                _uiState.update { it.copy(isDarkMode = mode) }
+            }
+        }
+        viewModelScope.launch {
+            userPreferences.userProfileImageBase64.collect { base64 ->
+                if (base64 != null) {
+                    try {
+                        @OptIn(kotlin.io.encoding.ExperimentalEncodingApi::class)
+                        val bytes = kotlin.io.encoding.Base64.decode(base64)
+                        _uiState.update { it.copy(profileImageBytes = bytes) }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
     }
 
     private fun loadProfile() {
@@ -102,6 +121,12 @@ class ProfileViewModel(
         _uiState.update { it.copy(profileImageBytes = bytes) }
     }
 
+    fun toggleDarkMode(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferences.setDarkMode(enabled)
+        }
+    }
+
     fun saveProfile() {
         val state = _uiState.value
 
@@ -133,6 +158,16 @@ class ProfileViewModel(
             )
 
             userPreferences.saveUserProfile(profile)
+
+            if (state.profileImageBytes != null) {
+                try {
+                    @OptIn(kotlin.io.encoding.ExperimentalEncodingApi::class)
+                    val base64 = kotlin.io.encoding.Base64.encode(state.profileImageBytes)
+                    userPreferences.saveUserProfileImageBase64(base64)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
 
             val updatedHistory = state.weightHistory.toMutableList().apply {
                 if (newWeight > 0.0) add(newWeight)

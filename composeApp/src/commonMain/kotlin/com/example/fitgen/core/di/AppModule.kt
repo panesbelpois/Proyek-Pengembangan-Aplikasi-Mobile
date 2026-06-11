@@ -39,6 +39,7 @@ import com.example.fitgen.presentation.screens.nutrition.NutritionViewModel
 import com.example.fitgen.presentation.screens.profile.ProfileViewModel
 import com.example.fitgen.presentation.screens.workout.AddWorkoutViewModel
 import com.example.fitgen.presentation.screens.workout.ExerciseDetailViewModel
+import com.example.fitgen.presentation.screens.workout.ActiveSessionViewModel
 import com.example.fitgen.presentation.screens.workout.WorkoutListViewModel
 import com.example.fitgen.presentation.screens.ai.AIAssistantViewModel
 import com.example.fitgen.presentation.screens.ai.DynamicWorkoutViewModel
@@ -118,9 +119,10 @@ val viewModelModule = module {
     viewModelOf(::WorkoutListViewModel)
     viewModelOf(::AddWorkoutViewModel)
     viewModelOf(::ExerciseDetailViewModel)
+    viewModelOf(::ActiveSessionViewModel)
     viewModelOf(::NutritionViewModel)
     viewModelOf(::AddMealViewModel)
-    singleOf(::ProfileViewModel)
+    viewModelOf(::ProfileViewModel)
 }
 
 // ==================== SHARED MODULES ====================

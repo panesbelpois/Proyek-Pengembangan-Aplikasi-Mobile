@@ -17,13 +17,13 @@ import com.example.fitgen.domain.usecase.GetExerciseGifUseCase
 
 // ==================== ENUMS / DATA ====================
 
-enum class EquipmentChip(val label: String, val emoji: String) {
-    NO_EQUIPMENT("Tanpa Alat", "🏠"),
-    DUMBBELL("Dumbbell", "🏋️"),
-    BARBELL("Barbel", "🔩"),
-    RESISTANCE_BAND("Resistance Band", "〰️"),
-    KETTLEBELL("Kettlebell", "⚾"),
-    GYM_FULL("Gym Lengkap", "🏢")
+enum class EquipmentChip(val label: String) {
+    NO_EQUIPMENT("Tanpa Alat"),
+    DUMBBELL("Dumbbell"),
+    BARBELL("Barbel"),
+    RESISTANCE_BAND("Resistance Band"),
+    KETTLEBELL("Kettlebell"),
+    GYM_FULL("Gym Lengkap")
 }
 
 enum class DurationChip(val label: String, val minutes: Int) {
@@ -35,13 +35,13 @@ enum class DurationChip(val label: String, val minutes: Int) {
     MIN_60("60 Menit", 60)
 }
 
-enum class GoalChip(val label: String, val emoji: String) {
-    FAT_BURN("Bakar Lemak", "🔥"),
-    MUSCLE_BUILD("Bangun Otot", "💪"),
-    CARDIO("Kardio", "❤️"),
-    STRENGTH("Kekuatan", "🦾"),
-    FLEXIBILITY("Fleksibilitas", "🧘"),
-    ENDURANCE("Daya Tahan", "⚡")
+enum class GoalChip(val label: String) {
+    FAT_BURN("Bakar Lemak"),
+    MUSCLE_BUILD("Bangun Otot"),
+    CARDIO("Kardio"),
+    STRENGTH("Kekuatan"),
+    FLEXIBILITY("Fleksibilitas"),
+    ENDURANCE("Daya Tahan")
 }
 
 enum class LevelChip(val label: String) {

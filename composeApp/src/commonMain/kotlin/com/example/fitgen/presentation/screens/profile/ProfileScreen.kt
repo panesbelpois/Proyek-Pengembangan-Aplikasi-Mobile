@@ -41,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -235,7 +236,7 @@ fun ProfileScreen(
                             shape = RoundedCornerShape(20.dp),
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color(0xFFFFF3E0) // Light orange
+                                containerColor = Color(0xFFE65100) // Dark orange
                             )
                         ) {
                             Column(
@@ -246,7 +247,7 @@ fun ProfileScreen(
                                 Text(
                                     "Total Kalori",
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = Color(0xFFE65100),
+                                    color = Color.White,
                                     fontWeight = FontWeight.SemiBold
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -255,9 +256,9 @@ fun ProfileScreen(
                                         text = uiState.totalCalories.toString(),
                                         style = MaterialTheme.typography.titleLarge,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color(0xFFE65100)
+                                        color = Color.White
                                     )
-                                    Text(" kkal", style = MaterialTheme.typography.labelSmall, color = Color(0xFFE65100), modifier = Modifier.padding(bottom = 2.dp))
+                                    Text(" kkal", style = MaterialTheme.typography.labelSmall, color = Color.White, modifier = Modifier.padding(bottom = 2.dp))
                                 }
                             }
                         }
@@ -266,7 +267,7 @@ fun ProfileScreen(
                             shape = RoundedCornerShape(20.dp),
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color(0xFFE3F2FD) // Light blue
+                                containerColor = Color(0xFF0D47A1) // Dark blue
                             )
                         ) {
                             Column(
@@ -277,7 +278,7 @@ fun ProfileScreen(
                                 Text(
                                     "Menit Aktif",
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = Color(0xFF1565C0),
+                                    color = Color.White,
                                     fontWeight = FontWeight.SemiBold
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -286,11 +287,43 @@ fun ProfileScreen(
                                         text = uiState.activeMinutes.toString(),
                                         style = MaterialTheme.typography.titleLarge,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color(0xFF1565C0)
+                                        color = Color.White
                                     )
-                                    Text(" mnt", style = MaterialTheme.typography.labelSmall, color = Color(0xFF1565C0), modifier = Modifier.padding(bottom = 2.dp))
+                                    Text(" mnt", style = MaterialTheme.typography.labelSmall, color = Color.White, modifier = Modifier.padding(bottom = 2.dp))
                                 }
                             }
+                        }
+                    }
+                }
+
+                // App Settings
+                item {
+                    Text(
+                        "Pengaturan Aplikasi",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Mode Gelap (Dark Mode)", style = MaterialTheme.typography.bodyLarge)
+                            Switch(
+                                checked = uiState.isDarkMode,
+                                onCheckedChange = { viewModel.toggleDarkMode(it) }
+                            )
                         }
                     }
                 }
