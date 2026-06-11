@@ -229,7 +229,10 @@ fun AppNavHost(
             composable<Route.WorkoutList> {
                 WorkoutListScreen(
                     onNavigateToAddWorkout = { navigationActions.navigateToDynamicWorkout() },
-                    onNavigateToDetail     = { }
+                    onNavigateToDetail     = { },
+                    onNavigateToApiExerciseDetail = { name, bodyPart, gifUrl, instructions ->
+                        navigationActions.navigateToExerciseDetail(name, bodyPart, gifUrl, instructions)
+                    }
                 )
             }
             composable<Route.AddWorkout> {

@@ -11,11 +11,13 @@ import com.example.fitgen.data.remote.api.GeminiService
 import com.example.fitgen.data.remote.api.GroqService
 import com.example.fitgen.data.repository.AIRepositoryImpl
 import com.example.fitgen.data.repository.BodyMetricRepositoryImpl
+import com.example.fitgen.data.repository.CustomRoutineRepositoryImpl
 import com.example.fitgen.data.repository.ExerciseImageRepositoryImpl
 import com.example.fitgen.data.repository.MealRepositoryImpl
 import com.example.fitgen.data.repository.WorkoutRepositoryImpl
 import com.example.fitgen.domain.repository.AIRepository
 import com.example.fitgen.domain.repository.BodyMetricRepository
+import com.example.fitgen.domain.repository.CustomRoutineRepository
 import com.example.fitgen.domain.repository.ExerciseImageRepository
 import com.example.fitgen.domain.repository.MealRepository
 import com.example.fitgen.domain.repository.WorkoutRepository
@@ -36,6 +38,7 @@ import com.example.fitgen.presentation.screens.nutrition.AddMealViewModel
 import com.example.fitgen.presentation.screens.nutrition.NutritionViewModel
 import com.example.fitgen.presentation.screens.profile.ProfileViewModel
 import com.example.fitgen.presentation.screens.workout.AddWorkoutViewModel
+import com.example.fitgen.presentation.screens.workout.ExerciseDetailViewModel
 import com.example.fitgen.presentation.screens.workout.WorkoutListViewModel
 import com.example.fitgen.presentation.screens.ai.AIAssistantViewModel
 import com.example.fitgen.presentation.screens.ai.DynamicWorkoutViewModel
@@ -83,6 +86,7 @@ val repositoryModule = module {
     single<MealRepository> { MealRepositoryImpl() }
     single<BodyMetricRepository> { BodyMetricRepositoryImpl() }
     singleOf(::ExerciseImageRepositoryImpl) bind ExerciseImageRepository::class
+    single<CustomRoutineRepository> { CustomRoutineRepositoryImpl(get()) }
 }
 
 // ==================== USE CASE MODULE ====================
@@ -113,6 +117,7 @@ val viewModelModule = module {
     viewModelOf(::HomeDashboardViewModel)
     viewModelOf(::WorkoutListViewModel)
     viewModelOf(::AddWorkoutViewModel)
+    viewModelOf(::ExerciseDetailViewModel)
     viewModelOf(::NutritionViewModel)
     viewModelOf(::AddMealViewModel)
     singleOf(::ProfileViewModel)

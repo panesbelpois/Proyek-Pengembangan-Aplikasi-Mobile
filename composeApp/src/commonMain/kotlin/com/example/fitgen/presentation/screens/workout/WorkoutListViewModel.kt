@@ -2,16 +2,23 @@ package com.example.fitgen.presentation.screens.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fitgen.data.remote.api.ExerciseApiService
+import com.example.fitgen.data.remote.dto.ExerciseDto
+import com.example.fitgen.domain.model.CustomRoutine
 import com.example.fitgen.domain.model.WorkoutLog
+import com.example.fitgen.domain.repository.CustomRoutineRepository
 import com.example.fitgen.domain.usecase.GetAllWorkoutsUseCase
 import com.example.fitgen.domain.usecase.WorkoutSortBy
 import com.example.fitgen.domain.repository.WorkoutRepository
+import com.example.fitgen.core.network.NetworkResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -40,10 +47,12 @@ data class WeeklyProgressData(
     val count: Int
 )
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class WorkoutListViewModel(
     private val getAllWorkoutsUseCase: GetAllWorkoutsUseCase,
-    private val repository: WorkoutRepository
+    private val repository: WorkoutRepository,
+    private val customRoutineRepository: CustomRoutineRepository,
+    private val exerciseApiService: ExerciseApiService
 ) : ViewModel() {
 
     private val _sortBy = MutableStateFlow(WorkoutSortBy.TANGGAL_TERBARU)
@@ -54,6 +63,34 @@ class WorkoutListViewModel(
 
     private val _timeFilter = MutableStateFlow(WorkoutTimeFilter.SEMUA)
     val timeFilter: StateFlow<WorkoutTimeFilter> = _timeFilter
+
+    private val _apiSearchResults = MutableStateFlow<List<ExerciseDto>>(emptyList())
+    val apiSearchResults: StateFlow<List<ExerciseDto>> = _apiSearchResults
+
+    val customRoutines: StateFlow<List<CustomRoutine>> = customRoutineRepository.getAllRoutines()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    init {
+        viewModelScope.launch {
+            _searchQuery
+                .debounce(500L)
+                .collect { query ->
+                    if (query.isNotBlank()) {
+                        when (val result = exerciseApiService.searchExerciseByName(query)) {
+                            is NetworkResult.Success -> _apiSearchResults.value = result.data
+                            is NetworkResult.Error -> _apiSearchResults.value = emptyList()
+                            is NetworkResult.Loading -> _apiSearchResults.value = emptyList()
+                        }
+                    } else {
+                        _apiSearchResults.value = emptyList()
+                    }
+                }
+        }
+    }
 
     val uiState: StateFlow<WorkoutListUiState> = combine(
         _sortBy.flatMapLatest { getAllWorkoutsUseCase(it) },
@@ -140,6 +177,24 @@ class WorkoutListViewModel(
     fun deleteWorkout(id: Long) {
         viewModelScope.launch {
             repository.deleteWorkout(id)
+        }
+    }
+
+    fun deleteCustomRoutine(id: Long) {
+        viewModelScope.launch {
+            customRoutineRepository.deleteRoutine(id)
+        }
+    }
+
+    fun createCustomRoutine(name: String) {
+        viewModelScope.launch {
+            customRoutineRepository.insertRoutine(name)
+        }
+    }
+
+    fun removeExerciseFromRoutine(exerciseId: Long) {
+        viewModelScope.launch {
+            customRoutineRepository.removeExerciseFromRoutine(exerciseId)
         }
     }
 }
