@@ -115,7 +115,7 @@ val viewModelModule = module {
     viewModelOf(::AddWorkoutViewModel)
     viewModelOf(::NutritionViewModel)
     viewModelOf(::AddMealViewModel)
-    viewModelOf(::ProfileViewModel)
+    singleOf(::ProfileViewModel)
 }
 
 // ==================== SHARED MODULES ====================

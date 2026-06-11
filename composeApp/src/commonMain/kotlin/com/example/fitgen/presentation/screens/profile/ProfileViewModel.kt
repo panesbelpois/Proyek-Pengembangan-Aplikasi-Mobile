@@ -18,6 +18,7 @@ data class ProfileUiState(
     val height: String = "",
     val weight: String = "",
     val goal: String = "",
+    val profileImageBytes: ByteArray? = null,
     val weightHistory: List<Double> = emptyList(),
     val totalCalories: Int = 0,
     val activeMinutes: Int = 0,
@@ -95,6 +96,10 @@ class ProfileViewModel(
 
     fun onGoalChange(value: String) {
         _uiState.update { it.copy(goal = value) }
+    }
+
+    fun onProfileImageChange(bytes: ByteArray?) {
+        _uiState.update { it.copy(profileImageBytes = bytes) }
     }
 
     fun saveProfile() {

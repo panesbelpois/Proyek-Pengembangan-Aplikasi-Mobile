@@ -34,6 +34,9 @@ sealed interface Route {
     @Serializable
     data object Profile : Route
 
+    @Serializable
+    data object EditProfile : Route
+
     // AI Dynamic Workout
     @Serializable
     data object DynamicWorkout : Route
@@ -63,6 +66,7 @@ interface NavigationActions {
     fun navigateToNutrition()
     fun navigateToAddMeal()
     fun navigateToProfile()
+    fun navigateToEditProfile()
     fun navigateToExerciseDetail(name: String, bodyPart: String, gifUrl: String, instructions: String)
     fun navigateToActiveSession(exerciseName: String)
     fun navigateBack()

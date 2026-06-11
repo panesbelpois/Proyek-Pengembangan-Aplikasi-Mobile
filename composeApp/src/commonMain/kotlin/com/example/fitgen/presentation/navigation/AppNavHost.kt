@@ -52,6 +52,7 @@ import com.example.fitgen.presentation.screens.home.HomeScreen
 import com.example.fitgen.presentation.screens.nutrition.AddMealScreen
 import com.example.fitgen.presentation.screens.nutrition.NutritionScreen
 import com.example.fitgen.presentation.screens.profile.ProfileScreen
+import com.example.fitgen.presentation.screens.profile.EditProfileScreen
 import com.example.fitgen.presentation.screens.workout.AddWorkoutScreen
 import com.example.fitgen.presentation.screens.workout.WorkoutListScreen
 import com.example.fitgen.presentation.screens.workout.ActiveSessionScreen
@@ -242,6 +243,12 @@ fun AppNavHost(
             }
             composable<Route.Profile> {
                 ProfileScreen(
+                    onNavigateBack = { navigationActions.navigateBack() },
+                    onNavigateToEditProfile = { navigationActions.navigateToEditProfile() }
+                )
+            }
+            composable<Route.EditProfile> {
+                EditProfileScreen(
                     onNavigateBack = { navigationActions.navigateBack() }
                 )
             }
@@ -292,7 +299,10 @@ private fun createNavigationActions(navController: NavHostController): Navigatio
         }
         override fun navigateToAddMeal() = navController.navigate(Route.AddMeal)
         override fun navigateToProfile() {
-            navController.navigate(Route.Profile) { popUpTo(Route.Profile) { inclusive = true } }
+            navController.navigate(Route.Profile) { launchSingleTop = true }
+        }
+        override fun navigateToEditProfile() {
+            navController.navigate(Route.EditProfile) { launchSingleTop = true }
         }
         override fun navigateToExerciseDetail(name: String, bodyPart: String, gifUrl: String, instructions: String) {
             navController.navigate(Route.ExerciseDetail(name, bodyPart, gifUrl, instructions))
