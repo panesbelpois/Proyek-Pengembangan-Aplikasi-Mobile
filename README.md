@@ -10,8 +10,6 @@
 <br>
 ![Android](https://img.shields.io/badge/Android-Supported-4CAF50?logo=android&logoColor=white)
 <br>
-![iOS](https://img.shields.io/badge/iOS-Supported-black?logo=apple&logoColor=white)
-<br>
 ![Status](https://img.shields.io/badge/Status-Completed-4CAF50)
 
 *Aplikasi pelacak kebugaran dan kesehatan komprehensif dengan asisten virtual cerdas.*
