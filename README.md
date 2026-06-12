@@ -120,32 +120,38 @@ Aplikasi ini menggunakan teknologi lintas platform yang modern dan clean archite
 ## Diagram Arsitektur MVVM
 FitGen mengimplementasikan pola arsitektur Model-View-ViewModel (MVVM) dengan pemisahan Clean Architecture antara lapisan Data, Domain, dan UI/Presentation.
 
-'''mermaid
+```mermaid
 graph TD
-    %% Node Definitions
-    VM["ViewModel<br>(State Holders & Events)"]
-    V["View / UI Screen<br>(Compose Multiplatform)"]
-    UC["Use Cases<br>(Domain Layer / Business Logic)"]
-    RI["Repository Interface"]
+    %% Definisi Node Utama
+    V["🎨 View / UI Screen<br>(Compose Multiplatform)"]
+    VM["⚡ ViewModel<br>(State Holders & Events)"]
+    UC["⚙️ Use Cases<br>(Domain Layer / Business Logic)"]
+    RI["📋 Repository Interface"]
+    RI_Impl["🏗️ Repository Implementation<br>(Data Layer)"]
     
-    RI_Impl["Repository Implementation<br>(Data Layer)"]
-    DB["Local Database<br>(SQLDelight / DataStore)"]
-    API["Remote API<br>(Ktor / Gemini / Wger)"]
+    %% Penyimpanan & Sumber Data
+    DB[("💾 Local Database<br>(SQLDelight / DataStore)")]
+    API["🌐 Remote API<br>(Ktor / Gemini / Wger)"]
 
-    %% Connections (UI & Domain Layer)
-    VM -->|"Observe UI State (Flow)"| V
+    %% Alur Hubungan Komponen (UML Flow)
     V -->|"Kirim Intent / Aksi"| VM
-    VM -->|"Panggil Logic"| UC
+    VM -->|"Observe UI State (Flow)"| V
+    VM -->|"Panggil Logika Bisnis"| UC
     UC --> RI
+    RI_Impl -.->|"Mengimplementasikan"| RI
+    RI_Impl -->|"Akses Data Lokal"| DB
+    RI_Impl -->|"Fetch & Request"| API
 
-    %% Connections (Data Layer)
-    RI_Impl --> DB
-    RI_Impl --> API
+    %% Penataan Gaya Visual (Mermaid Styling)
+    classDef layerView fill:#f9f0ff,stroke:#d3adf7,stroke-width:2px;
+    classDef layerVM fill:#e6f7ff,stroke:#91d5ff,stroke-width:2px;
+    classDef layerDomain fill:#f6ffed,stroke:#b7eb8f,stroke-width:2px;
+    classDef layerData fill:#fff7e6,stroke:#ffd591,stroke-width:2px;
     
-    %% Hidden link to align the two separate trees side-by-side
-    VM ~~~ RI_Impl
-'''
-
+    class V layerView;
+    class VM layerVM;
+    class UC,RI layerDomain;
+    class RI_Impl,DB,API layerData;
 ---
 
 ## Persyaratan Sistem & Instalasi
@@ -168,6 +174,7 @@ Instalasi & Cara Menjalankan
 ## Struktur Proyek
 Berikut adalah gambaran tingkat tinggi dari struktur proyek Kotlin Multiplatform ini:
 
+```teks
 📦 composeApp/src/commonMain
  ┣ 📂 core          # Utilitas umum, Config Ktor, Ekstensi, dll.
  ┣ 📂 data          # Repository Implementation, Data Sources (SQLDelight, Ktor).
@@ -175,19 +182,26 @@ Berikut adalah gambaran tingkat tinggi dari struktur proyek Kotlin Multiplatform
  ┣ 📂 domain        # Interface Repository, Models (Entity), dan Use Cases.
  ┣ 📂 presentation  # Layer UI (Screens), ViewModels, dan Theme.
  ┗ 📂 sqldelight    # Skema Tabel Database (.sq) untuk Code Generation.
-
+```
  ---
 
  ## Video YouTube
  Tonton demonstrasi lengkap fitur dan cara penggunaan aplikasi FitGen pada video di bawah ini:
- [![YouTube](https://img.shields.io/badge/YOUTUBE-TONTON%20DEMO%20FITGEN-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtube.com/shorts/2iAqDp_CnL0)
+
+ <div align="center">
+  <a href="https://youtube.com/shorts/2iAqDp_CnL0">
+    <img src="https://img.shields.io/badge/YOUTUBE-TONTON%20DEMO%20FITGEN-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Tonton Demo FitGen di YouTube">
+  </a>
+</div>
 
  ---
 
  ## Anggota Tim
- |**No**|**Nama**|**NIM**|
- |1|Anisah Octa Rohila|123140137|
- |2|Fanisa Aulia Safitri|123140121|
+ 
+ | **No** | **Nama** | **NIM** |
+ | --- | --- | --- |
+ | 1 | Anisah Octa Rohila | 123140137 |
+ | 2 | Fanisa Aulia Safitri | 123140121 |
 
 **Dosen Pengampu**: Muhammad Habib Alghifari, S.kom., M.Kom.
 **Program Studi**: Teknik Informatika
