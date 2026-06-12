@@ -56,7 +56,7 @@ Berikut adalah cuplikan fitur-fitur dari aplikasi FitGen:
 4. **Classic Workout & Timer + Tambah Custom Latihan**
    | **Classic Workout Light** | **Timer Light** | **Custom Latihan Light** | **Classic Workout Dark** | **Timer Dark** | **Custom Latihan Dark** | 
    | :---: | :---: | :---: | :---: | :---: | :---: |
-   | <img width="200" alt="Classic Workout Light" src="docs/images/homepage2.jpg" /> | <img width="200" alt="Timer Light" src="docs/images/homepage_timer.jpg" /> | <img width="200" alt="Custom Latihan Light" src="docs/images/latihanpage_rutinitas_custom.jpg" /> | <img width="200" alt="Classic Workout Dark" src="docs/images/ss2.jpg" /> | <img width="200" alt="Timer Dark" src="docs/images/ss6.jpg" /> | <img width="200" alt="Custom Latihan Dark" src="docs/images/ss14.jpeg" /> |
+   | <img width="200" alt="Classic Workout Light" src="docs/images/homepage2.jpg" /> | <img width="200" alt="Timer Light" src="docs/images/homepage_timer.jpg" /> | <img width="200" alt="Custom Latihan Light" src="docs/images/latihanpage_rutinitas_custom.jpg" /> | <img width="200" alt="Classic Workout Dark" src="docs/images/ss2.jpg" /> | <img width="200" alt="Timer Dark" src="docs/images/ss6.jpg" /> | <img width="200" alt="Custom Latihan Dark" src="docs/images/ss16.jpeg" /> |
 
 5. **Page Latihan & Rekap Latihan**
    | **Page Latihan Light** | **Page Latihan Dark** |
@@ -66,7 +66,7 @@ Berikut adalah cuplikan fitur-fitur dari aplikasi FitGen:
 6. **Custom Latihan & Search Bar Latihan**
    | **Rutinitas Baru Light** | **Search Bar Light** | **Rutinitas Baru Dark** | **Search Bar Dark** |
    | :---: | :---: | :---: | :---: |
-   | <img width="200" alt="Rutinitas Baru Light" src="docs/images/latihanpage_rutinitas_baru.jpg" /> | <img width="200" alt="Search Light" src="docs/images/latihanpage_search_result.jpg" /> | <img width="200" alt="Rutinitas Baru Dark" src="docs/images/ss8.jpg" /> | <img width="200" alt="Search Dark" src="docs/images/ss15.jpeg" /> |
+   | <img width="200" alt="Rutinitas Baru Light" src="docs/images/latihanpage_rutinitas_baru.jpg" /> | <img width="200" alt="Search Light" src="docs/images/latihanpage_search_result.jpg" /> | <img width="200" alt="Rutinitas Baru Dark" src="docs/images/ss14.jpeg" /> | <img width="200" alt="Search Dark" src="docs/images/ss15.jpeg" /> |
 
 7. **Page Nutrisi Harian & AI Cam Food Scanner**
    | **Nutrisi Harian Light** | **Food Scanner Light** | **Nutrisi Harian Dark** | **Food Scanner Dark** |
