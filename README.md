@@ -29,11 +29,11 @@ Oleh karena itu, FitGen hadir untuk merevolusi cara pengguna memantau gaya hidup
 
 ```text
 📦 composeApp/src/commonMain
- ┣ **Catatan:** Proyek ini disusun secara khusus untuk memenuhi **Tugass Besar Mata Kuliah Pengembangan Aplikasi Mobile (PAM)**
+ ┣ **Catatan:** Proyek ini disusun secara khusus untuk memenuhi **Tugas Besar Mata Kuliah Pengembangan Aplikasi Mobile (PAM)**
 ```
 --- 
 ## Fitur Utama
-1. **AI Food Scanner (Pemindai Nutrisi)** - Pindai gambar makanamu, dan AI akan mengidentifikasi nama makanan, estimasi kalori, serta rincian makronutrien (Protein, Karbohidrat, Lemak) secara otomatis
+1. **AI Food Scanner (Pemindai Nutrisi)** - Pindai gambar makananmu, dan AI akan mengidentifikasi nama makanan, estimasi kalori, serta rincian makronutrien (Protein, Karbohidrat, Lemak) secara otomatis
 2. **AI Workout Generator/Smart Assistant** - Chatbot cerdas yang siap menjawab pertanyaanmu mengenai rekomendasi latihan, penyesuaian jadwal latihan, diet, dan pemulihan tubuh
 3. **Daily Tracker (Nutrisi & Hidrasi)** - Lacak jumlah asupan harianmu, asupan nutrisi, air, serta login streak untuk menjaga motivasi dengan grafik yang interaktif.
 4. **Popular Challenges & Exercises** - Ikuti tantangan olahraga populer dan cari katalog latihan dengan panduan animasi/GIF (didukung oleh Wger API).
@@ -50,7 +50,7 @@ Berikut adalah cuplikan fitur-fitur dari aplikasi FitGen:
    | :---: | :---: |
    | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/bd20e6c1-85e3-4042-90e1-610ed4eec94e" /> | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/e1e2b9d2-779c-47bc-9dc7-3609530a330a" /> | 
 3. **AI Workout & Assistant**
-   | **AI Workout** | **Assitans** |
+   | **AI Workout** | **Assistant** |
    | :---: | :---: |
    | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/50e9919e-85f5-4da6-824a-b5f3418f9e48" /> | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/08bfdc18-a374-434d-b89c-2ac65d88e28d" /> |
 4. **Classic Workout & Timer + Tambah Custom Latihan**
@@ -104,17 +104,9 @@ Aplikasi ini menggunakan teknologi lintas platform yang modern dan clean archite
 
 ---
 
-## Diagram Arsitektur MVVM
-FitGen mengimplementasikan pola arsitektur Model-View-ViewModel (MVVM) dengan pemisahan Clean Architecture antara lapisan Data, Domain, dan UI/Presentation.
-
-Terima kasih atas koreksinya. Pemahaman Anda sudah sangat tepat mengenai siklus aliran data pada MVVM dan Clean Architecture. Teks pada panah sebelumnya memang kurang pas secara logika arah interaksinya.
-
-Berikut adalah sintaks Mermaid yang sudah diperbaiki logikanya. Sekarang View secara eksplisit meng-observe state dari ViewModel dan mengirimkan intent ke arah yang benar, diteruskan hingga ke eksekusi database dan API:
-
-Markdown
 ## 🏗️ Diagram Arsitektur MVVM
 
-Aplikasi ini menerapkan pola arsitektur **MVVM (Model-View-ViewModel)** yang dipadukan dengan prinsip *Clean Architecture* untuk memastikan kode komponen tetap terpisah, modular, mudah diuji (*testable*), serta optimal saat dijalankan di lingkungan Kotlin Multiplatform.
+FitGen mengimplementasikan pola arsitektur **MVVM (Model-View-ViewModel)** yang dipadukan dengan prinsip *Clean Architecture* untuk memastikan kode komponen tetap terpisah, modular, mudah diuji (*testable*), serta optimal saat dijalankan di lingkungan Kotlin Multiplatform.
 
 ```mermaid
 graph TD
@@ -163,7 +155,7 @@ Instalasi & Cara Menjalankan
    ```bash
    git clone <link-repositori>
    ```
-3. Siapkan local.properties: Duplikat file local.properties.example menjadi local.properties dan isi dengan API Key yang valid (untuk Gemini AI API dll).
+2. Siapkan local.properties: Duplikat file local.properties.example menjadi local.properties dan isi dengan API Key yang valid (untuk Gemini AI API dll).
 4. Sinkronisasi Gradle: Buka project di Android Studio, lalu lakukan sync project dengan Gradle files.
 5. Jalankan Aplikasi:
    * Android: Pilih konfigurasi run composeApp untuk Android dan tekan Run (shift + F10).
@@ -174,7 +166,7 @@ Instalasi & Cara Menjalankan
 ## Struktur Proyek
 Berikut adalah gambaran tingkat tinggi dari struktur proyek Kotlin Multiplatform ini:
 
-```teks
+```text
 📦 composeApp/src/commonMain
  ┣ 📂 core          # Utilitas umum, Config Ktor, Ekstensi, dll.
  ┣ 📂 data          # Repository Implementation, Data Sources (SQLDelight, Ktor).
