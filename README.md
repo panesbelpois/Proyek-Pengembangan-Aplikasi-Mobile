@@ -9,6 +9,7 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-Multiplatform-0081CB?logo=kotlin&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-Supported-4CAF50?logo=android&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Completed-4CAF50)
+[![CI/CD Build](https://github.com/panesbelpois/Proyek-Pengembangan-Aplikasi-Mobile/actions/workflows/ci.yml/badge.svg)](https://github.com/panesbelpois/Proyek-Pengembangan-Aplikasi-Mobile/actions)
 
 *Aplikasi pelacak kebugaran dan kesehatan komprehensif dengan asisten virtual cerdas.*
 
@@ -151,6 +152,12 @@ graph TD
 
 ---
 
+## 📥 Download Aplikasi (APK)
+Anda dapat mengunduh dan mencoba langsung aplikasi FitGen di perangkat Android Anda melalui tautan berikut:
+**[⬇️ Download FitGen APK](https://s.itera.id/FitGenAPK)**
+
+---
+
 ## Persyaratan Sistem & Instalasi
 Persyaratan Sistem:
 * **Java**: JDK 17 atau lebih baru
@@ -196,10 +203,10 @@ Berikut adalah gambaran tingkat tinggi dari struktur proyek Kotlin Multiplatform
 
  ## Anggota Tim
  
- | **No** | **Nama** | **NIM** |
- | --- | --- | --- |
- | 1 | Anisah Octa Rohila | 123140137 |
- | 2 | Fanisa Aulia Safitri | 123140121 |
+ | **No** | **Nama** | **NIM** | **Role** | **GitHub** |
+ | :---: | --- | :---: | --- | --- |
+ | 1 | Anisah Octa Rohila | 123140137 | Lead Developer, UI/UX & AI Integrator | [@panesbelpois](https://github.com/panesbelpois) |
+ | 2 | Fanisa Aulia Safitri | 123140121 | Co-Developer, Local Database & QA Tester | [@Applepi121](https://github.com/Applepi121) |
 
 
 **Dosen Pengampu**: Muhammad Habib Alghifari, S.kom., M.Kom.

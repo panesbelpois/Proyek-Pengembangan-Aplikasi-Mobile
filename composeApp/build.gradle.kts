@@ -110,6 +110,17 @@ kotlin {
             implementation("io.coil-kt.coil3:coil-gif:3.0.4")
         }
 
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation(libs.ext.junit)
+                implementation(libs.espresso.core)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.uiTest)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.uiTestJUnit4)
+            }
+        }
+
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.sqldelight.native.driver)
