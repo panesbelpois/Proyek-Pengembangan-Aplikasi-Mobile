@@ -120,6 +120,15 @@ Aplikasi ini menggunakan teknologi lintas platform yang modern dan clean archite
 ## Diagram Arsitektur MVVM
 FitGen mengimplementasikan pola arsitektur Model-View-ViewModel (MVVM) dengan pemisahan Clean Architecture antara lapisan Data, Domain, dan UI/Presentation.
 
+Terima kasih atas koreksinya. Pemahaman Anda sudah sangat tepat mengenai siklus aliran data pada MVVM dan Clean Architecture. Teks pada panah sebelumnya memang kurang pas secara logika arah interaksinya.
+
+Berikut adalah sintaks Mermaid yang sudah diperbaiki logikanya. Sekarang View secara eksplisit meng-observe state dari ViewModel dan mengirimkan intent ke arah yang benar, diteruskan hingga ke eksekusi database dan API:
+
+Markdown
+## 🏗️ Diagram Arsitektur MVVM
+
+Aplikasi ini menerapkan pola arsitektur **MVVM (Model-View-ViewModel)** yang dipadukan dengan prinsip *Clean Architecture* untuk memastikan kode komponen tetap terpisah, modular, mudah diuji (*testable*), serta optimal saat dijalankan di lingkungan Kotlin Multiplatform.
+
 ```mermaid
 graph TD
     %% Definisi Node Utama
@@ -133,14 +142,14 @@ graph TD
     DB[("💾 Local Database<br>(SQLDelight / DataStore)")]
     API["🌐 Remote API<br>(Ktor / Gemini / Wger)"]
 
-    %% Alur Hubungan Komponen (UML Flow)
+    %% Alur Hubungan Komponen (Logika yang Diperbaiki)
     V -->|"Kirim Intent / Aksi"| VM
-    VM -->|"Observe UI State (Flow)"| V
-    VM -->|"Panggil Logika Bisnis"| UC
-    UC --> RI
+    V -.->|"Observe UI State (Flow)"| VM
+    VM -->|"Panggil Logic / Use Cases"| UC
+    UC -->|"Melakukan Penyimpanan / Akses Data"| RI
     RI_Impl -.->|"Mengimplementasikan"| RI
-    RI_Impl -->|"Akses Data Lokal"| DB
-    RI_Impl -->|"Fetch & Request"| API
+    RI_Impl -->|"Operasi Local Database"| DB
+    RI_Impl -->|"Operasi Remote API"| API
 
     %% Penataan Gaya Visual (Mermaid Styling)
     classDef layerView fill:#f9f0ff,stroke:#d3adf7,stroke-width:2px;
@@ -164,10 +173,12 @@ Persyaratan Sistem:
 
 Instalasi & Cara Menjalankan
 1. Clone repositori ini
+   ```bash
    git clone <link-repositori>
-2. Siapkan local.properties: Duplikat file local.properties.example menjadi local.properties dan isi dengan API Key yang valid (untuk Gemini AI API dll).
-3. Sinkronisasi Gradle: Buka project di Android Studio, lalu lakukan sync project dengan Gradle files.
-4. Jalankan Aplikasi:
+   ```
+3. Siapkan local.properties: Duplikat file local.properties.example menjadi local.properties dan isi dengan API Key yang valid (untuk Gemini AI API dll).
+4. Sinkronisasi Gradle: Buka project di Android Studio, lalu lakukan sync project dengan Gradle files.
+5. Jalankan Aplikasi:
    * Android: Pilih konfigurasi run composeApp untuk Android dan tekan Run (shift + F10).
    * iOS: Pilih konfigurasi run iosApp dan jalankan di simulator atau perangkat fisik Apple.
   
@@ -189,8 +200,7 @@ Berikut adalah gambaran tingkat tinggi dari struktur proyek Kotlin Multiplatform
 
  ## Video YouTube
  Tonton demonstrasi lengkap fitur dan cara penggunaan aplikasi FitGen pada video di bawah ini:
-
- <div align="center">
+ <div align="left">
   <a href="https://youtube.com/shorts/2iAqDp_CnL0">
     <img src="https://img.shields.io/badge/YOUTUBE-TONTON%20DEMO%20FITGEN-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Tonton Demo FitGen di YouTube">
   </a>
