@@ -43,38 +43,38 @@ Oleh karena itu, FitGen hadir untuk merevolusi cara pengguna memantau gaya hidup
 Berikut adalah cuplikan fitur-fitur dari aplikasi FitGen:
 1. **Homepage & Dashboard**
    <div align="center">
-      <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/6ea3fe11-da78-40e9-b413-f9f2a34f7c1b" />
+      <img width="200" alt="image" src="https://github.com/user-attachments/assets/6ea3fe11-da78-40e9-b413-f9f2a34f7c1b" />
    </div>
 2. **Popular Challenges & Detail**
    | **Popular Challenges** | **Detail** |
    | :---: | :---: |
-   | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/bd20e6c1-85e3-4042-90e1-610ed4eec94e" /> | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/e1e2b9d2-779c-47bc-9dc7-3609530a330a" /> | 
+   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/bd20e6c1-85e3-4042-90e1-610ed4eec94e" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/e1e2b9d2-779c-47bc-9dc7-3609530a330a" /> | 
 3. **AI Workout & Assistant**
    | **AI Workout** | **Assistant** |
    | :---: | :---: |
-   | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/50e9919e-85f5-4da6-824a-b5f3418f9e48" /> | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/08bfdc18-a374-434d-b89c-2ac65d88e28d" /> |
+   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/50e9919e-85f5-4da6-824a-b5f3418f9e48" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/08bfdc18-a374-434d-b89c-2ac65d88e28d" /> |
 4. **Classic Workout & Timer + Tambah Custom Latihan**
    | **Classic Workout** | **Timer** | **Tambah Custom Latihan** |
    | :---: | :---: | :---: |
-   | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/60d7b2d1-398f-47b2-974f-fd1f95b593f2" /> | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/fe97c112-7a80-477d-a528-18c2c23cba4b" /> | <img width="700" height="300" alt="image" src="https://github.com/user-attachments/assets/d36f7157-68d1-4c39-a8ef-4cb3a46dba6b" /> |
+   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/60d7b2d1-398f-47b2-974f-fd1f95b593f2" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/fe97c112-7a80-477d-a528-18c2c23cba4b" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/d36f7157-68d1-4c39-a8ef-4cb3a46dba6b" /> |
    
 5. **Page Latihan & Rekap Latihan (Harian/Mingguan/Bulanan)**
    | **Page Latihan dan Rekap Latihan** |
    | :---: |
-   | <img width="720" height="1600" alt="image" src="https://github.com/user-attachments/assets/f87665c2-a604-4dea-a07b-08ea81f60635" /> |
+   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/f87665c2-a604-4dea-a07b-08ea81f60635" /> |
 6. **Custom Latihan & Search Bar Latihan**
    | **Custom Latihan dan Search Bar Latihan** |
    | :---: | 
-   | <img width="720" height="1600" alt="image" src="https://github.com/user-attachments/assets/e872bcc8-8beb-4149-83c7-c57011fffb34" /> |
+   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/e872bcc8-8beb-4149-83c7-c57011fffb34" /> |
 7. **Page Nutrisi Harian & AI Cam Food Scanner**
    | **Page Nutrisi Harian** | **AI Cam Food Scanner** |
    | :---: | :---: |
-   | <img width="720" height="1600" alt="image" src="https://github.com/user-attachments/assets/9a2c6c3c-391c-4f52-bee7-b0c918b2bf1f" /> | <img width="720" height="1600" alt="image" src="https://github.com/user-attachments/assets/a9c6cd2f-7ac1-46a5-a0ff-315c2a0fe497" /> |
+   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/9a2c6c3c-391c-4f52-bee7-b0c918b2bf1f" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/a9c6cd2f-7ac1-46a5-a0ff-315c2a0fe497" /> |
    
 8. **Profil Page & Edit Profil**
    | **Profil Page** | **Edit Profil** |
    | :---: | :---: |
-   | <img width="375" height="1600" alt="image" src="https://github.com/user-attachments/assets/c6cf5963-9286-4902-9c59-eefb41c7b54e" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/2aa96fee-fbb8-48d0-922b-c2d649a01d06" /> |
+   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/c6cf5963-9286-4902-9c59-eefb41c7b54e" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/2aa96fee-fbb8-48d0-922b-c2d649a01d06" /> |
 
 ---
 
@@ -156,8 +156,8 @@ Instalasi & Cara Menjalankan
    git clone <link-repositori>
    ```
 2. Siapkan local.properties: Duplikat file local.properties.example menjadi local.properties dan isi dengan API Key yang valid (untuk Gemini AI API dll).
-4. Sinkronisasi Gradle: Buka project di Android Studio, lalu lakukan sync project dengan Gradle files.
-5. Jalankan Aplikasi:
+3. Sinkronisasi Gradle: Buka project di Android Studio, lalu lakukan sync project dengan Gradle files.
+4. Jalankan Aplikasi:
    * Android: Pilih konfigurasi run composeApp untuk Android dan tekan Run (shift + F10).
    * iOS: Pilih konfigurasi run iosApp dan jalankan di simulator atau perangkat fisik Apple.
   
