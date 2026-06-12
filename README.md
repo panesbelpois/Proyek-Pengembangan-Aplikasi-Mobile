@@ -55,7 +55,7 @@ Berikut adalah cuplikan fitur-fitur dari aplikasi FitGen:
    | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/50e9919e-85f5-4da6-824a-b5f3418f9e48" /> | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/08bfdc18-a374-434d-b89c-2ac65d88e28d" /> |
 4. **Classic Workout & Timer + Tambah Custom Latihan**
    | **Classic Workout** | **Timer** | **Tambah Custom Latihan** |
-   | :---: | :---: |
+   | :---: | :---: | :---: |
    | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/60d7b2d1-398f-47b2-974f-fd1f95b593f2" /> | <img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/fe97c112-7a80-477d-a528-18c2c23cba4b" /> | <img width="700" height="300" alt="image" src="https://github.com/user-attachments/assets/d36f7157-68d1-4c39-a8ef-4cb3a46dba6b" /> |
    
 5. **Page Latihan & Rekap Latihan (Harian/Mingguan/Bulanan)**
