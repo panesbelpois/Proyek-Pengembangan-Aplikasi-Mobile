@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="200" height="200" alt="Desain tanpa judul" src="https://github.com/user-attachments/assets/ca01a9ad-5d4e-40c7-a89a-4687bca6e554" />
+  <img width="150" height="150" alt="Desain tanpa judul" src="https://github.com/user-attachments/assets/ca01a9ad-5d4e-40c7-a89a-4687bca6e554" />
 </div>
 
 <div align="center">
@@ -42,39 +42,37 @@ Oleh karena itu, FitGen hadir untuk merevolusi cara pengguna memantau gaya hidup
 ## Screenshots
 Berikut adalah cuplikan fitur-fitur dari aplikasi FitGen:
 1. **Homepage & Dashboard**
-   <div align="center">
-      <img width="200" alt="image" src="https://github.com/user-attachments/assets/6ea3fe11-da78-40e9-b413-f9f2a34f7c1b" />
-   </div>
+   | **Homepage dan Dashboard Light Mode** | **Homepage dan Dashboard Dark Mode** |
+   | :---: | :---: |
+   | <img width="1080" height="2436" alt="homepage1" src="https://github.com/user-attachments/assets/3d5723c3-45e1-436d-b5af-7736280beea6" /> | <img width="1080" height="2436" alt="ss1" src="https://github.com/user-attachments/assets/c1bbed66-5004-472f-9ead-f2cfa8de9ae4" /> | 
 2. **Popular Challenges & Detail**
-   | **Popular Challenges** | **Detail** |
-   | :---: | :---: |
-   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/bd20e6c1-85e3-4042-90e1-610ed4eec94e" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/e1e2b9d2-779c-47bc-9dc7-3609530a330a" /> | 
+   | **Popular Challenges Light Mode** | **Detail Light Mode** | **Popular Challengers Dark Mode** | **Detail Dark Mode** |
+   | :---: | :---: | :---: | :---: |
+   | <img width="1080" height="2436" alt="homepage1" src="https://github.com/user-attachments/assets/9e83372b-526c-4f16-87f4-008bc71c84a2" /> | <img width="1080" height="2436" alt="homepage_detail_workout" src="https://github.com/user-attachments/assets/62eeb52f-55c9-449f-930f-7d7ea898bd25" /> | <img width="1080" height="2436" alt="ss1" src="https://github.com/user-attachments/assets/b8a992dd-d81e-4d8e-8d1d-3fdf2225d452" /> | <img width="1080" height="2436" alt="ss5" src="https://github.com/user-attachments/assets/e1bfd782-c205-495c-a10d-ce7bd440372c" /> |
 3. **AI Workout & Assistant**
-   | **AI Workout** | **Assistant** |
+   | **AI Workout dan Assistant Light Mode** | **AI Workout dan Assistant Dark Mode** |
    | :---: | :---: |
-   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/50e9919e-85f5-4da6-824a-b5f3418f9e48" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/08bfdc18-a374-434d-b89c-2ac65d88e28d" /> |
+   | <img width="1080" height="2436" alt="homepage_ai_wo_generator1" src="https://github.com/user-attachments/assets/57b84376-e7c6-4aa7-9e24-8bfaa7a605b7" /> | <img width="1080" height="2436" alt="ss4" src="https://github.com/user-attachments/assets/5baa5122-75f8-4a48-81ee-1b3846ff32c1" /> |
 4. **Classic Workout & Timer + Tambah Custom Latihan**
-   | **Classic Workout** | **Timer** | **Tambah Custom Latihan** |
-   | :---: | :---: | :---: |
-   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/60d7b2d1-398f-47b2-974f-fd1f95b593f2" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/fe97c112-7a80-477d-a528-18c2c23cba4b" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/d36f7157-68d1-4c39-a8ef-4cb3a46dba6b" /> |
-   
+   | **Classic Workout Light Mode** | **Timer Light Mode** | **Tambah Custom Latihan Light Mode** | **Classic Workout Dark Mode** | **Timer Dark Mode** | **Tambah Custom Latihan Dark Mode** | 
+   | :---: | :---: | :---: | :---: | :---: | :---: |
+   | <img width="1080" height="2436" alt="homepage2" src="https://github.com/user-attachments/assets/2ccc096a-dfe7-43b3-a5cc-9ce9fc5cd0eb" /> | <img width="1080" height="2436" alt="homepage_timer" src="https://github.com/user-attachments/assets/395d1af6-2bf7-42b2-b34e-4e5454fab86c" /> | <img width="1080" height="2436" alt="homepage_detail_workout" src="https://github.com/user-attachments/assets/cb3df7fe-1fd1-43d9-8199-c8ff7b481d29" /> | <img width="1080" height="2436" alt="ss2" src="https://github.com/user-attachments/assets/9bbaeccd-101b-4cf6-9913-f9ed994ebae4" /> | <img width="1080" height="2436" alt="ss6" src="https://github.com/user-attachments/assets/0663146a-14f9-4a52-9692-20278e1d6868" /> | <img width="1080" height="2436" alt="ss5" src="https://github.com/user-attachments/assets/933fd49a-883f-4d1f-b517-20f044a03fc0" /> |
 5. **Page Latihan & Rekap Latihan (Harian/Mingguan/Bulanan)**
-   | **Page Latihan dan Rekap Latihan** |
-   | :---: |
-   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/f87665c2-a604-4dea-a07b-08ea81f60635" /> |
+   | **Page Latihan dan Rekap Latihan Light Mode** | **Page Latihan dan Rekap Latihan Dark Mode** |
+   | :---: | :---: |
+   | <img width="1080" height="2436" alt="latihanpage_riwayat_latihan" src="https://github.com/user-attachments/assets/c2c3453b-1e8d-461b-ad16-1733724e1df4" /> | <img width="1080" height="2436" alt="ss7" src="https://github.com/user-attachments/assets/271b0a89-7425-46c7-97b3-6ab816c92bc4" /> |
 6. **Custom Latihan & Search Bar Latihan**
-   | **Custom Latihan dan Search Bar Latihan** |
-   | :---: | 
-   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/e872bcc8-8beb-4149-83c7-c57011fffb34" /> |
+   | **Custom Latihan Light Mode** | **Search Bar Latihan Light Mode** | **Custom Latihan Light Mode Dark Mode** | **Search Bar Latihan Dark Mode** |
+   | :---: | :---: | :---: | :---: |
+   | <img width="1080" height="2436" alt="latihanpage_rutinitas_baru" src="https://github.com/user-attachments/assets/4159a238-eaa4-4062-9101-eaffe60ce74f" /> | <img width="1080" height="2436" alt="latihanpage_search_result" src="https://github.com/user-attachments/assets/ab3217e1-494f-47a7-a6be-45a340ee7819" /> | <img width="1080" height="2436" alt="ss8" src="https://github.com/user-attachments/assets/efceafa9-3d85-4a47-bda1-a34494b3a3c2" /> | <img width="1080" height="2436" alt="ss8" src="https://github.com/user-attachments/assets/016bc79b-0e5b-495e-819a-43b67e515007" /> |
 7. **Page Nutrisi Harian & AI Cam Food Scanner**
-   | **Page Nutrisi Harian** | **AI Cam Food Scanner** |
-   | :---: | :---: |
-   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/9a2c6c3c-391c-4f52-bee7-b0c918b2bf1f" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/a9c6cd2f-7ac1-46a5-a0ff-315c2a0fe497" /> |
-   
+   | **Page Nutrisi Harian Light Mode** | **AI Cam Food Scanner Light Mode** | **Page Nutrisi Harian Dark Mode** | **AI Cam Food Scanner Dark Mode** |
+   | :---: | :---: | :---: | :---: |
+   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/9a2c6c3c-391c-4f52-bee7-b0c918b2bf1f" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/a9c6cd2f-7ac1-46a5-a0ff-315c2a0fe497" /> | <img width="1080" height="2436" alt="ss10" src="https://github.com/user-attachments/assets/1ea45cea-2720-436b-b6b2-12dfa0b13a48" /> | <img width="1080" height="2436" alt="ss9" src="https://github.com/user-attachments/assets/615ab8da-0b16-49cb-b922-6149a096f673" /> |
 8. **Profil Page & Edit Profil**
-   | **Profil Page** | **Edit Profil** |
-   | :---: | :---: |
-   | <img width="200" alt="image" src="https://github.com/user-attachments/assets/c6cf5963-9286-4902-9c59-eefb41c7b54e" /> | <img width="200" alt="image" src="https://github.com/user-attachments/assets/2aa96fee-fbb8-48d0-922b-c2d649a01d06" /> |
+   | **Profil Page Light Mode** | **Edit Profil Light Mode** | **Profil Page Dark Mode** | **Edit Profil Dark Mode** |
+   | :---: | :---: | :---: | :---: |
+   | <img width="1080" height="2436" alt="profile_page1" src="https://github.com/user-attachments/assets/a46e8366-8252-40f0-a5f3-0f708ed16d4d" /> | <img width="1080" height="2436" alt="edit_profile" src="https://github.com/user-attachments/assets/bb56256d-961d-42b9-9505-2433b6a2ce15" /> | <img width="1080" height="2436" alt="ss11" src="https://github.com/user-attachments/assets/89c96d88-cc39-4018-894a-9adb9b282b27" /> | <img width="1080" height="2436" alt="ss12" src="https://github.com/user-attachments/assets/6f942bac-5e6d-4630-97d7-6fec8edabd95" /> |
 
 ---
 
