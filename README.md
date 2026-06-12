@@ -152,6 +152,8 @@ graph TD
     class VM layerVM;
     class UC,RI layerDomain;
     class RI_Impl,DB,API layerData;
+```
+
 ---
 
 ## Persyaratan Sistem & Instalasi
