@@ -64,6 +64,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import androidx.compose.material.icons.filled.FitnessCenter
+import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -454,21 +457,6 @@ fun DynamicWorkoutScreen(
                                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                     lineHeight = 22.sp
                                                 )
-                                                
-                                                // GIF Image
-                                                if (!item.gifUrl.isNullOrBlank()) {
-                                                    Spacer(Modifier.height(12.dp))
-                                                    AsyncImage(
-                                                        model = item.gifUrl,
-                                                        contentDescription = item.englishName,
-                                                        contentScale = ContentScale.Crop,
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .height(200.dp)
-                                                            .clip(RoundedCornerShape(16.dp))
-                                                            .background(MaterialTheme.colorScheme.surface)
-                                                    )
-                                                }
                                             }
                                         }
                                         

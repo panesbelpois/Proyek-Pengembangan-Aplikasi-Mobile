@@ -57,7 +57,14 @@ class GeminiService(private val client: HttpClient) {
             }
 
         } catch (e: Exception) {
-            throw Exception("${e.message}")
+            val msg = e.message ?: ""
+            if (msg.contains("resolve host", ignoreCase = true) || 
+                msg.contains("UnknownHostException", ignoreCase = true) || 
+                msg.contains("ConnectException", ignoreCase = true) ||
+                msg.contains("failed to connect", ignoreCase = true)) {
+                throw Exception("Tidak ada koneksi internet. Silakan periksa jaringan Anda.")
+            }
+            throw e
         }
     }
 }

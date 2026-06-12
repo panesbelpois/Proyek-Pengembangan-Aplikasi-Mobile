@@ -161,7 +161,8 @@ fun EditProfileScreen(
                 FitGenTextField(
                     value = uiState.name,
                     onValueChange = viewModel::onNameChange,
-                    label = "Nama Lengkap"
+                    label = "Nama Lengkap",
+                    errorMessage = uiState.nameError
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -169,13 +170,15 @@ fun EditProfileScreen(
                         value = uiState.age,
                         onValueChange = viewModel::onAgeChange,
                         label = "Usia (Tahun)",
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        errorMessage = uiState.ageError
                     )
                     FitGenTextField(
                         value = uiState.gender,
                         onValueChange = viewModel::onGenderChange,
                         label = "Jenis Kelamin",
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        errorMessage = uiState.genderError
                     )
                 }
                 
@@ -184,13 +187,15 @@ fun EditProfileScreen(
                         value = uiState.height,
                         onValueChange = viewModel::onHeightChange,
                         label = "Tinggi Badan (cm)",
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        errorMessage = uiState.heightError
                     )
                     FitGenTextField(
                         value = uiState.weight,
                         onValueChange = viewModel::onWeightChange,
                         label = "Berat Badan (kg)",
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        errorMessage = uiState.weightError
                     )
                 }
 

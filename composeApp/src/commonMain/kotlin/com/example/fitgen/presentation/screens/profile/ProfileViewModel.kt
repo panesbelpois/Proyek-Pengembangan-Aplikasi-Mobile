@@ -207,6 +207,7 @@ class ProfileViewModel(
         if (value.isBlank()) return "$fieldName tidak boleh kosong"
         val intVal = value.toIntOrNull() ?: return "$fieldName harus berupa angka"
         if (intVal <= 0) return "$fieldName harus lebih dari 0"
+        if (fieldName == "Umur" && intVal > 120) return "$fieldName maksimal 120"
         return null
     }
 
@@ -214,6 +215,8 @@ class ProfileViewModel(
         if (value.isBlank()) return "$fieldName tidak boleh kosong"
         val doubleVal = value.toDoubleOrNull() ?: return "$fieldName harus berupa angka"
         if (doubleVal <= 0) return "$fieldName harus lebih dari 0"
+        if (fieldName == "Berat badan" && doubleVal > 500) return "$fieldName maksimal 500 kg"
+        if (fieldName == "Tinggi badan" && doubleVal > 300) return "$fieldName maksimal 300 cm"
         return null
     }
 }

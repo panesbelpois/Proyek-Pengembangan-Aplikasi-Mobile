@@ -58,19 +58,30 @@ class GroqService(private val client: HttpClient) {
             maxTokens = 1000
         )
         
-        val httpResponse: HttpResponse = client.post(BASE_URL) {
-            contentType(ContentType.Application.Json)
-            header("Authorization", "Bearer ${BuildKonfig.GROQ_API_KEY}")
-            setBody(request)
+        try {
+            val httpResponse: HttpResponse = client.post(BASE_URL) {
+                contentType(ContentType.Application.Json)
+                header("Authorization", "Bearer ${BuildKonfig.GROQ_API_KEY}")
+                setBody(request)
+            }
+            
+            if (!httpResponse.status.isSuccess()) {
+                val errorBody = httpResponse.bodyAsText()
+                throw Exception("Groq API Error (${httpResponse.status.value}): $errorBody")
+            }
+            
+            val response = httpResponse.body<GroqChatResponse>()
+            response.getTextContent() ?: throw Exception("Respons kosong dari Groq AI")
+        } catch (e: Exception) {
+            val msg = e.message ?: ""
+            if (msg.contains("resolve host", ignoreCase = true) || 
+                msg.contains("UnknownHostException", ignoreCase = true) || 
+                msg.contains("ConnectException", ignoreCase = true) ||
+                msg.contains("failed to connect", ignoreCase = true)) {
+                throw Exception("Tidak ada koneksi internet. Silakan periksa jaringan Anda.")
+            }
+            throw e
         }
-        
-        if (!httpResponse.status.isSuccess()) {
-            val errorBody = httpResponse.bodyAsText()
-            throw Exception("Groq API Error (${httpResponse.status.value}): $errorBody")
-        }
-        
-        val response = httpResponse.body<GroqChatResponse>()
-        response.getTextContent() ?: throw Exception("Respons kosong dari Groq AI")
     }
 
     suspend fun analyzeImage(prompt: String, imageBytes: ByteArray): String {
@@ -96,18 +107,29 @@ class GroqService(private val client: HttpClient) {
             maxTokens = 1000
         )
         
-        val httpResponse: HttpResponse = client.post(BASE_URL) {
-            contentType(ContentType.Application.Json)
-            header("Authorization", "Bearer ${BuildKonfig.GROQ_API_KEY}")
-            setBody(request)
+        try {
+            val httpResponse: HttpResponse = client.post(BASE_URL) {
+                contentType(ContentType.Application.Json)
+                header("Authorization", "Bearer ${BuildKonfig.GROQ_API_KEY}")
+                setBody(request)
+            }
+            
+            if (!httpResponse.status.isSuccess()) {
+                val errorBody = httpResponse.bodyAsText()
+                throw Exception("Groq API Error (${httpResponse.status.value}): $errorBody")
+            }
+            
+            val response = httpResponse.body<GroqChatResponse>()
+            return response.getTextContent() ?: throw Exception("Respons kosong dari Groq AI")
+        } catch (e: Exception) {
+            val msg = e.message ?: ""
+            if (msg.contains("resolve host", ignoreCase = true) || 
+                msg.contains("UnknownHostException", ignoreCase = true) || 
+                msg.contains("ConnectException", ignoreCase = true) ||
+                msg.contains("failed to connect", ignoreCase = true)) {
+                throw Exception("Tidak ada koneksi internet. Silakan periksa jaringan Anda.")
+            }
+            throw e
         }
-        
-        if (!httpResponse.status.isSuccess()) {
-            val errorBody = httpResponse.bodyAsText()
-            throw Exception("Groq API Error (${httpResponse.status.value}): $errorBody")
-        }
-        
-        val response = httpResponse.body<GroqChatResponse>()
-        return response.getTextContent() ?: throw Exception("Respons kosong dari Groq AI")
     }
 }
